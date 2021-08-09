@@ -10,27 +10,13 @@
   let lastop = null
   let result = 0
 
-  const add = function (n, o) {
-    return n + o
-  }
+  const add = (n, o) => (n * 10 + o * 10) / 10
+  const sub = (n, o) => (n * 10 - o * 10) / 10
+  const div = (n, o) => (n * 10 / o * 10) / 10
+  const mul = (n, o) => (n * 10 * o * 10) / 10
+  const res = n => n
 
-  const sub = function (n, o) {
-    return n - o
-  }
-
-  const div = function (n, o) {
-    return n / o
-  }
-
-  const mul = function (n, o) {
-    return n * o
-  }
-
-  const res = function (n) {
-    return n
-  }
-
-  const cal = function (num1, num2, calback) {
+  const cal = (num1, num2, calback) => {
     if (typeof calback === 'function') {
       return calback(num1, num2)
     }
@@ -44,7 +30,7 @@
     '=': res
   }
 
-  const btn = function (e) {
+  const btn = e => {
     if (
       !e.target.matches('input') ||
             e.target.id === 'src' ||
