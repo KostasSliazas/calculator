@@ -11,8 +11,8 @@
   let result = 0
   const add = (n, o) => (n % 1 !== 0 || o % 1 !== 0) ? ((n * 10) + (o * 10)) / 10 : n + o
   const sub = (n, o) => (n % 1 !== 0 || o % 1 !== 0) ? ((n * 10) - (o * 10)) / 10 : n - o
-  const div = (n, o) => (n % 1 !== 0 && o % 1 !== 0 && n !== o) ? ((n * 10) / (o * 10)) / 100 : n / o
   const mul = (n, o) => (n % 1 === 0 && o % 1 === 0) ? n * o : ((n * 10) * (o * 10)) / 100
+  const div = (n, o) => ((n !== o) && (n % 1 !== 0 || o % 1 !== 0)) ? (n * 10) / (o * 10) : n / o
   const res = n => n
 
   const cal = (num1, num2, calback) => {
@@ -32,14 +32,13 @@
   const btn = e => {
     // if target !== input || id === src (sreen) || id === esoud return false and do nothing
     if (e.target.tagName !== 'INPUT' || e.target.id === 'src' || e.target.id === 'esound') return false
+    operator = null
 
     // if e.target data === num push value (number)
     if (e.target.dataset.num) {
       if (firstNumber[0] === '0' && firstNumber[1] !== '.') firstNumber.length = 0
-
       firstNumber.push(e.target.value)
       // operator null after num click
-      operator = null
     }
     // set operator
     if (e.target.dataset.fun) operator = e.target.value
