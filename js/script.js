@@ -9,8 +9,8 @@
   let operator = null
   let lastopOperator = null
   let result = 0
-  const add = (n, o) => (n % 1 !== 0 || o % 1 !== 0) ? ((n * 10) + (o * 10)) / 10 : n + o
-  const sub = (n, o) => (n % 1 !== 0 || o % 1 !== 0) ? ((n * 10) - (o * 10)) / 10 : n - o
+  const add = (n, o) => ((n % 1 !== 0) && (o % 1 !== 0)) ? ((n * (+1 + '0'.repeat(Math.max(n.toString().split('.')[1].length, o.toString().split('.')[1].length))) + (o * (+1 + '0'.repeat(Math.max(n.toString().split('.')[1].length, o.toString().split('.')[1].length)))))) / (+1 + '0'.repeat(Math.max(n.toString().split('.')[1].length, o.toString().split('.')[1].length))) : n + o
+  const sub = (n, o) => (n % 1 !== 0 || o % 1 !== 0) ? ((n * 100) - (o * 100)) / 100 : n - o
   const mul = (n, o) => (n % 1 === 0 && o % 1 === 0) ? n * o : ((n * 10) * (o * 10)) / 100
   const div = (n, o) => ((n !== o) && (n % 1 !== 0 || o % 1 !== 0)) ? (n * 10) / (o * 10) : n / o
   const res = n => n
