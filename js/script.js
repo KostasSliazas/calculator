@@ -89,7 +89,7 @@
     const tim = window.setTimeout(() => {
       calcScreen.classList.remove('blink')
       window.clearTimeout(tim)
-    }, 50)
+    }, 100)
     // play some creepy sound
     if (document.getElementById('esound').checked) sound()
   }

@@ -230,12 +230,12 @@ body::after {
   font-family: "Numbers", monospace;
   color: #333;
   text-align: right;
-  transition: .2s all;
+  transition: .1s color;
   padding: 0 5px
 }
 
 #src.blink {
-  font-size: 10px;
+  color: #fff;
 }
 @media screen and (min-width: 768px) {
   .in {
