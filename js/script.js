@@ -48,6 +48,7 @@
         .substring(0, 15)
         .replace(/[^0-9]/g, '.')
         .split('')
+      if (firstNumber.join('').charAt(firstNumber.join('').length - 2) === '.') firstNumber.pop()
       result = 0
       lastopOperator = null
       firstNumber.pop()
