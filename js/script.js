@@ -32,7 +32,7 @@
   const btn = e => {
     // if target !== input || id === src (sreen) || id === esoud return false and do nothing
     if (e.target.tagName !== 'INPUT' || e.target.id === 'src' || e.target.id === 'esound') return
-    // operator = null
+    operator = null
     // if e.target data === num push value (number)
     if (e.target.dataset.num) {
       if (firstNumber[0] === '0' && firstNumber[1] !== '.') firstNumber.length = 0
