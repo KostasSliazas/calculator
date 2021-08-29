@@ -31,9 +31,8 @@
 
   const btn = e => {
     // if target !== input || id === src (sreen) || id === esoud return false and do nothing
-    if (e.target.tagName !== 'INPUT' || e.target.id === 'src' || e.target.id === 'esound') return false
-    operator = null
-
+    if (e.target.tagName !== 'INPUT' || e.target.id === 'src' || e.target.id === 'esound') return
+    // operator = null
     // if e.target data === num push value (number)
     if (e.target.dataset.num) {
       if (firstNumber[0] === '0' && firstNumber[1] !== '.') firstNumber.length = 0
@@ -63,7 +62,7 @@
     result = firstNumber.join('')
 
     if (operator === '/' || operator === '*' || operator === '+' || operator === '-' || operator === '=') {
-      if (lastopOperator === operator) return false
+      // if (lastopOperator === operator) return
       firstNumber.length = 0
       if (secondNumber && lastopOperator) {
         result = cal(parseFloat(secondNumber), parseFloat(result), cals[lastopOperator])
