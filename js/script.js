@@ -19,9 +19,9 @@
     if (typeof calback === 'function') {
       const n1 = num1.toString().split('.')[1]
       const n2 = num2.toString().split('.')[1]
-      const len1 = (n1 && n1.length) || 0
-      const len2 = (n2 && n2.length) || 0
-      if (typeof len1 !== 'undefined' || typeof len2 !== 'undefined') return parseFloat(calback(num1, num2).toFixed(len1 + len2))
+      const len1 = n1 && n1.length
+      const len2 = n2 && n2.length
+      if (typeof len1 !== 'undefined' || typeof len2 !== 'undefined') return calback(parseFloat(num1), parseFloat(num2)).toPrecision(len1 || 0 + len2 || 0)
       return calback(num1, num2)
     }
   }
@@ -63,10 +63,9 @@
     if (operator === '/' || operator === '*' || operator === '+' || operator === '-' || operator === '=') {
       firstNumber.length = 0
       if (secondNumber && lastopOperator) {
-        result = cal(Number(secondNumber), Number(result), cals[lastopOperator])
+        result = cal(secondNumber, result, cals[lastopOperator])
       }
       secondNumber = result
-      console.log(operator)
       lastopOperator = res(operator)
     }
 
