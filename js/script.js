@@ -36,7 +36,7 @@
       const n2 = num2.toString().split('.')[1]
       const len1 = n1 && n1.length
       const len2 = n2 && n2.length
-      if (typeof len1 !== 'undefined' || typeof len2 !== 'undefined') return calback(parseFloat(num1), parseFloat(num2)).toPrecision(len1 || 0 + len2 || 0)
+      if (typeof len1 !== 'undefined' && typeof len2 !== 'undefined') return calback(parseFloat(num1), parseFloat(num2)).toPrecision(len1 || 0 + len2 || 0)
       return calback(num1, num2)
     }
   }
