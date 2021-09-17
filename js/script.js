@@ -10,24 +10,18 @@
   let lastop = null
   let result = 0
 
-  const add = function (n, o) {
-    return n + o
-  }
+  const add = (n, o) => n + o
+  const sub = (n, o) => n - o
+  const div = (n, o) => n / o
+  const mul = (n, o) => n * o
+  const res = (n) => n
 
-  const sub = function (n, o) {
-    return n - o
-  }
-
-  const div = function (n, o) {
-    return n / o
-  }
-
-  const mul = function (n, o) {
-    return n * o
-  }
-
-  const res = function (n) {
-    return n
+  const cals = {
+    '/': div,
+    '*': mul,
+    '+': add,
+    '-': sub,
+    '=': res
   }
 
   const cal = function (num1, num2, calback) {
@@ -41,76 +35,36 @@
     }
   }
 
-  const cals = {
-    '/': div,
-    '*': mul,
-    '+': add,
-    '-': sub,
-    '=': res
-  }
-
   const btn = function (e) {
     op = null
-    if (
-      !e.target.matches('input') ||
-      e.target.id === 'src' ||
-      e.target.id === 'esound'
-    ) {
-      return false
-    }
+    if (!e.target.matches('input') || e.target.id === 'src' || e.target.id === 'esound') return
 
-    if (e.target.dataset.num) {
-      (n1[0] === '0' && n1[1] !== '.' && !!(n1.length = 0)) ||
-      n1.push(e.target.value)
-    }
+    if (e.target.dataset.num) (n1[0] === '0' && n1[1] !== '.' && !!(n1.length = 0)) || n1.push(e.target.value)
 
-    if (e.target.dataset.fun) {
-      op = e.target.value
-    }
+    if (e.target.dataset.fun) op = e.target.value
 
     if (op === '⌫') {
-      n1 = result
-        .toString(10)
-        .substring(0, 15)
-        .replace(/[^0-9]/g, '.')
-        .split('')
+      n1 = result.toString(10).substring(0, 15).replace(/[^0-9]/g, '.').split('')
       result = 0
       lastop = null
       n1.pop()
       n1.join('').charAt(n1.join('').length - 1) === '.' && n1.pop()
     }
 
-    if (!n1.length) {
-      n1 = ['0']
-    }
+    if (!n1.length) n1 = ['0']
 
-    if (op === ',' && !n1.includes('.')) {
-      n1.push('.')
-    }
+    if (op === ',' && !n1.includes('.')) n1.push('.')
 
     result = n1.join('')
 
-    if (
-      op === '/' ||
-      op === '*' ||
-      op === '+' ||
-      op === '-' ||
-      op === '='
-    ) {
+    if (op === '/' || op === '*' || op === '+' || op === '-' || op === '=') {
       n1.length = 0
-
-      if (n2 && lastop) {
-        result = cal(Number(n2), Number(result), cals[lastop])
-      }
-
+      if (n2 && lastop) result = cal(Number(n2), Number(result), cals[lastop])
       n2 = result
       lastop = res(op)
     }
 
-    if (!isFinite(result)) {
-      calcScreen.value = 'Ooops!'
-      return
-    }
+    if (!isFinite(result)) return (calcScreen.value = 'Ooops!')
 
     if (op === 'C') {
       n1.length = 0
@@ -120,7 +74,7 @@
     }
 
     calcScreen.value = result
-
+    // hide/show screen number 100 ms for UX
     calcScreen.classList.add('blink')
     const tim = window.setTimeout(() => {
       calcScreen.classList.remove('blink')
