@@ -114,11 +114,6 @@ input::-moz-selection {
   border: 0
 }
 
-#calculator input:hover {
-  background: #0e0e0e;
-  color: #fff;
-}
-
 #calculator input[type=button]:active {
   -webkit-box-shadow: 0 0 0 1px #000 inset, 0 2px 2px 0 #000 inset;
   box-shadow: 0 0 0 1px #000 inset, 0 2px 2px 0 #000 inset
@@ -210,14 +205,14 @@ input:checked+.slider:before {
 }
 
 body::after {
-  content: "KCalculator 1.1 by Kostas Šliažas created only for learning purposes";
+  content: "KCalculator 1.3 by Kostas Šliažas created only for learning purposes";
   text-align: center;
   height: 10px;
   position: absolute;
   bottom: 0;
   width: 100%;
   display: block;
-  font-size: 8px;
+  font-size: 0;
   color: #eee
 }
 #src {
