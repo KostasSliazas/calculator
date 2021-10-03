@@ -45,8 +45,6 @@
 
     if (op === '⌫') {
       n1 = result.toString(10).substring(0, 15).replace(/[^0-9]/g, '.').split('')
-      result = 0
-      lastop = null
       n1.pop()
       n1.join('').charAt(n1.join('').length - 1) === '.' && n1.pop()
     }
