@@ -104,7 +104,7 @@ input::-moz-selection {
   appearance: none;
   min-height: 1em;
   /*! transform: translateZ(0); */
-  transition: .1s
+  transition: .1s;
 }
 
 #calculator input::-moz-focus-inner,
@@ -116,8 +116,8 @@ input::-moz-selection {
 }
 
 #calculator input[type=button]:active {
-  -webkit-box-shadow: 0 0 0 1px #000 inset, 0 2px 2px 0 #000 inset;
-  box-shadow: 0 0 0 1px #000 inset, 0 2px 2px 0 #000 inset
+  -webkit-box-shadow: 0 0 0 1px #333 inset, 0 1px 1px #999;
+  box-shadow: 0 0 0 1px #333 inset, 0 1px 1px #999;
 }
 
 #calculator>[data-fun=p] {
@@ -144,15 +144,17 @@ input::-moz-selection {
   display: block;
   width: 100%;
   height: 100%;
-  background: #555;
-  box-shadow: 0 0 0 1px #000 inset;
-  border-radius: inherit
+  background: #444;
+  border-radius: inherit;
+  -webkit-box-shadow: 0 0 0 1px #333 inset, 0 1px 1px #999;
+  box-shadow: 0 0 0 1px #333 inset, 0 1px 1px #999;
 }
 
 .switch input {
   opacity: 0;
   width: 0;
-  height: 0
+  height: 0;
+  outline: 0;
 }
 
 .slider,
@@ -176,8 +178,8 @@ input::-moz-selection {
   -webkit-transition: .2s;
   -o-transition: .2s;
   transition: .2s;
-  -webkit-box-shadow: 0 0 0 1px #000 inset, 0 2px 2px 0 #777 inset;
-  box-shadow: 0 0 0 1px #000 inset, 0 2px 2px 0 #777 inset;
+  -webkit-box-shadow: 0 -1px 0 1px #333 inset, 0 1px 2px 0 #999 inset;
+  box-shadow: 0 -1px 0 1px #333 inset, 0 1px 2px 0 #999 inset;
   background: #777;
   content: "🔇";
   font-size: inherit;
@@ -190,8 +192,8 @@ input:checked+.slider {
 }
 
 input:focus+.slider {
-  -webkit-box-shadow: 0 0 1px #fff;
-  box-shadow: 0 0 1px #fff
+  /*! -webkit-box-shadow: 0 0 1px #fff; */
+  /*! box-shadow: 0 0 1px #fff */
 }
 
 input:checked+.slider:before {
