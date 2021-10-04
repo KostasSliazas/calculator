@@ -15,10 +15,11 @@ body {
   padding: 0;
   margin: 0;
   overflow: hidden;
-  background: #444;
-  background: -moz-radial-gradient(circle, #333 0, #000 70%);
-  background: -webkit-radial-gradient(circle, #333 0, #000 70%);
-  background: radial-gradient(circle, #333 0, #000 70%)
+  background: #332;
+  /*! background: -moz-radial-gradient(circle, #333 0, #000 70%); */
+  /*! background: -webkit-radial-gradient(circle, #333 0, #000 70%); */
+  /*! background: radial-gradient(circle, #333 0, #000 70%) */
+  /*! background: rgba(0, 0, 0, 0) repeating-linear-gradient(rgb(165, 182, 169) 0px, rgb(165, 182, 169) 4px, rgb(194, 182, 173) 4px, rgb(194, 182, 173) 8px) repeat fixed 0% 0%; */
 }
 
 #calculator,
@@ -55,9 +56,9 @@ body {
   -ms-flex-align: center;
   align-items: center;
   padding: 6px;
-  background: #222;
-  -webkit-box-shadow: 0 0 0 1px #000 inset, 0 0 4px 0 #000;
-  box-shadow: 0 0 0 1px #000 inset, 0 0 4px 0 #000;
+  background: #555;
+  /*! -webkit-box-shadow: 0 0 0 1px #000 inset, 0 0 4px 0 #000; */
+  /*! box-shadow: 0 0 0 1px #000 inset, 0 0 4px 0 #000; */
   font-size: 10vh;
   grid-gap: 6px;
   z-index: 1;
@@ -94,15 +95,15 @@ input::-moz-selection {
   border: 0;
   margin: 0;
   outline: 0;
-  color: #777;
-  -webkit-box-shadow: 0 0 0 1px #000 inset, 0 2px 2px 0 #777 inset, 0 2px 2px 0 #000;
-  box-shadow: 0 0 0 1px #000 inset, 0 2px 2px 0 #777 inset, 0 2px 2px 0 #000;
-  background: #111;
+  color: #ddd;
+  -webkit-box-shadow: 0 0 0 1px #333 inset, 0 2px 2px 0 #999 inset, 0 2px 2px 0 #333;
+  box-shadow: 0 0 0 1px #333 inset, 0 2px 2px 0 #999 inset, 0 2px 2px 0 #333;
+  background: #776;
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
   min-height: 1em;
-  transform: translateZ(0);
+  /*! transform: translateZ(0); */
   transition: .1s
 }
 
@@ -135,7 +136,7 @@ input::-moz-selection {
 }
 
 #calculator input[data-fun=clr] {
-  background: #700
+  background: #700;
 }
 
 .switch {
@@ -143,7 +144,7 @@ input::-moz-selection {
   display: block;
   width: 100%;
   height: 100%;
-  background: #111;
+  background: #555;
   box-shadow: 0 0 0 1px #000 inset;
   border-radius: inherit
 }
@@ -177,7 +178,7 @@ input::-moz-selection {
   transition: .2s;
   -webkit-box-shadow: 0 0 0 1px #000 inset, 0 2px 2px 0 #777 inset;
   box-shadow: 0 0 0 1px #000 inset, 0 2px 2px 0 #777 inset;
-  background: #111;
+  background: #777;
   content: "🔇";
   font-size: inherit;
   line-height: inherit;
@@ -185,7 +186,7 @@ input::-moz-selection {
 }
 
 input:checked+.slider {
-  background: #060
+  /*! background: #060 */
 }
 
 input:focus+.slider {
