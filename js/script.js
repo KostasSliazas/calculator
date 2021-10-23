@@ -29,46 +29,39 @@
     '=': res
   }
 
-  const cal = function (num1, num2, calback) {
+  const cal = (num1, num2, calback) => {
     if (typeof calback === 'function') {
       const n1 = num1.toString().split('.')[1]
       const n2 = num2.toString().split('.')[1]
-      const len1 = n1 && n1.length
-      const len2 = n2 && n2.length
-      if (typeof len1 !== 'undefined' && typeof len2 !== 'undefined') return parseFloat(calback(Number(num1), Number(num2)).toFixed(len1 + len2), 10)
-      return calback(num1, num2)
+      let len1 = n1 && n1.length
+      let len2 = n2 && n2.length
+      if (!len1) len1 = 0
+      if (!len2) len2 = 0
+      return parseFloat(calback(Number(num1), Number(num2)).toFixed(len1 + len2), 10)
     }
   }
 
-  const btn = function (e) {
+  const btn = (e) => {
     op = null
     if (!e.target.matches('input') || e.target.id === 'src' || e.target.id === 'esound') return
-
     if (e.target.dataset.num) (n1[0] === '0' && n1[1] !== '.' && !!(n1.length = 0)) || n1.push(e.target.value)
-
     if (e.target.dataset.fun) op = e.target.value
-
     if (op === '⌫') {
       n1 = result.toString(10).substring(0, 15).replace(/[^0-9]/g, '.').split('')
       n1.pop()
       n1.join('').charAt(n1.join('').length - 1) === '.' && n1.pop()
+      // lastop = null
     }
-
     if (!n1.length) n1 = ['0']
-
     if (op === ',' && !n1.includes('.')) n1.push('.')
-
     result = n1.join('')
-
     if (op === '/' || op === '*' || op === '+' || op === '-' || op === '=') {
-      n1.length = 0
       if (n2 && lastop) result = cal(Number(n2), Number(result), cals[lastop])
       n2 = result
+      n1.length = 0
       lastop = res(op)
     }
-
     if (!isFinite(result)) return (calcScreen.value = 'Ooooooops!')
-
     if (op === 'C') {
       n1.length = 0
       n2 = 0
