@@ -35,25 +35,31 @@
       const n2 = num2.toString().split('.')[1]
       const len1 = (n1 && n1.length) || 0
       const len2 = (n2 && n2.length) || 0
-      if (len1 && len2) return parseFloat(calback(Number(num1), Number(num2)).toFixed(len1 + len2), 10)
+      if ((len1 && len2) || (lastop === '-')) return parseFloat(calback(Number(num1), Number(num2)).toFixed(len1 + len2), 10)
       return calback(Number(num1), Number(num2))
     }
   }
 
   const btn = (e) => {
-    op = null
+    // if don't mach input or screen or esaund return
     if (!e.target.matches('input') || e.target.id === 'src' || e.target.id === 'esound') return
-    if (e.target.dataset.num) (n1[0] === '0' && n1[1] !== '.' && !!(n1.length = 0)) || n1.push(e.target.value)
+    op = null
+    // set operator when target is fun
     if (e.target.dataset.fun) op = e.target.value
+    // when number pressed push to array number
+    if (e.target.dataset.num) (n1[0] === '0' && n1[1] !== '.' && !!(n1.length = 0)) || n1.push(e.target.value)
+    // operator delete last number
     if (op === '⌫') {
       n1 = result.toString(10).substring(0, 15).replace(/[^0-9]/g, '.').split('')
       n1.pop()
       n1.join('').charAt(n1.join('').length - 1) === '.' && n1.pop()
-      // lastop = null
+      op = lastop = null
     }
+
     if (!n1.length) n1 = ['0']
     if (op === ',' && !n1.includes('.')) n1.push('.')
     result = n1.join('')
+
     if (op === '/' || op === '*' || op === '+' || op === '-' || op === '=') {
       if (n2 && lastop) result = cal(Number(n2), Number(result), cals[lastop])
       n2 = result
@@ -61,10 +67,10 @@
       lastop = res(op)
     }
     if (!isFinite(result)) return (calcScreen.value = 'Ooooooops!')
+
     if (op === 'C') {
-      n1.length = 0
-      n2 = 0
-      result = 0
+      op = lastop = null
+      result = n2 = n1.length = 0
       calcScreen.value = '0'
     }
     // set result to calcScreen
