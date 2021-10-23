@@ -35,7 +35,7 @@
       const n2 = num2.toString().split('.')[1]
       const len1 = (n1 && n1.length) || 0
       const len2 = (n2 && n2.length) || 0
-      if (len1 || len2) return parseFloat(calback(Number(num1), Number(num2)).toFixed(len1 + len2), 10)
+      if (len1 && len2) return parseFloat(calback(Number(num1), Number(num2)).toFixed(len1 + len2), 10)
       return calback(Number(num1), Number(num2))
     }
   }
