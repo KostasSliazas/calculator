@@ -57,13 +57,13 @@ h1 {
   align-items: center;
   padding: 6px;
   background: #4C4D52;
-  font-size: 10vh;
+  font-size: 9.5vh;
   grid-gap: 2px;
   z-index: 1;
   border-radius: 3px;
   height: 95vh;
-  -webkit-box-shadow: 0 0 0 1px #333 inset, 0 2px 2px 0 #999 inset, 0 2px 2px 0 #333;
-  box-shadow: 0 0 0 1px #333 inset, 0 2px 2px 0 #999 inset, 0 2px 2px 0 #333;
+  /* -webkit-box-shadow: 0 0 0 1px #333 inset, 0 2px 2px 0 #999 inset, 0 2px 2px 0 #333;
+  box-shadow: 0 0 0 1px #333 inset, 0 2px 2px 0 #999 inset, 0 2px 2px 0 #333; */
 }
 
 input {
@@ -96,8 +96,8 @@ input::-moz-selection {
   margin: 0;
   outline: 0;
   color: #ddd;
-  -webkit-box-shadow: 0 0 0 1px #333 inset, 0 2px 2px 0 #999 inset, 0 2px 2px 0 #333;
-  box-shadow: 0 0 0 1px #333 inset, 0 2px 2px 0 #999 inset, 0 2px 2px 0 #333;
+  /* -webkit-box-shadow: 0 0 0 1px #333 inset, 0 2px 2px 0 #999 inset, 0 2px 2px 0 #333;
+  box-shadow: 0 0 0 1px #333 inset, 0 2px 2px 0 #999 inset, 0 2px 2px 0 #333; */
   background: #1C1C1C;
   -webkit-appearance: none;
   -moz-appearance: none;
