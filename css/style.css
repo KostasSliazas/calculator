@@ -15,7 +15,7 @@ body {
   padding: 0;
   margin: 0;
   overflow: hidden;
-  background: #777
+  background: #000
 }
 
 h1 {
@@ -56,9 +56,9 @@ h1 {
   -ms-flex-align: center;
   align-items: center;
   padding: 6px;
-  background: #555;
+  background: #4C4D52;
   font-size: 10vh;
-  grid-gap: 6px;
+  grid-gap: 2px;
   z-index: 1;
   border-radius: 3px;
   height: 95vh;
@@ -98,7 +98,7 @@ input::-moz-selection {
   color: #ddd;
   -webkit-box-shadow: 0 0 0 1px #333 inset, 0 2px 2px 0 #999 inset, 0 2px 2px 0 #333;
   box-shadow: 0 0 0 1px #333 inset, 0 2px 2px 0 #999 inset, 0 2px 2px 0 #333;
-  background: #776;
+  background: #1C1C1C;
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
@@ -133,9 +133,10 @@ input::-moz-selection {
 #calculator div:empty {
   background: #999
 }
-
+#calculator input[data-fun=b],
 #calculator input[data-fun=clr] {
-  background: #700
+  color: #000;
+  background: #E3AF3F
 }
 
 .switch {
@@ -219,7 +220,7 @@ body::after {
   margin: 0;
   box-sizing: border-box;
   box-shadow: 0 2px 1px 0 #000 inset;
-  background: #eee;
+  background: #edfaf2;
   font-family: "Numbers", monospace;
   color: #555;
   text-align: right;
