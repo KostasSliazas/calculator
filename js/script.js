@@ -33,11 +33,10 @@
     if (typeof calback === 'function') {
       const n1 = num1.toString().split('.')[1]
       const n2 = num2.toString().split('.')[1]
-      let len1 = n1 && n1.length
-      let len2 = n2 && n2.length
-      if (!len1) len1 = 0
-      if (!len2) len2 = 0
-      return parseFloat(calback(Number(num1), Number(num2)).toFixed(len1 + len2), 10)
+      const len1 = (n1 && n1.length) || 0
+      const len2 = (n2 && n2.length) || 0
+      if (len1 || len2) return parseFloat(calback(Number(num1), Number(num2)).toFixed(len1 + len2), 10)
+      return calback(Number(num1), Number(num2))
     }
   }
 
