@@ -53,7 +53,7 @@
       n1 = result.toString(10).substring(0, 15).replace(/[^0-9]/g, '.').split('')
       n1.pop()
       n1.join('').charAt(n1.join('').length - 1) === '.' && n1.pop()
-      op = lastop = null
+      op = null
     }
 
     if (!n1.length) n1 = ['0']
