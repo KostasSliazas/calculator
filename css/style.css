@@ -19,6 +19,7 @@ h1 {
 
 #calculator,
 #calcwrap {
+  height: calc(100vh - 12px);
   position: relative;
   margin: 0 auto
 }
@@ -59,7 +60,6 @@ h1 {
   grid-gap: 2px;
   z-index: 1;
   /* border-radius: 3px; */
-  height: 100%
   /* -webkit-box-shadow: 0 0 0 1px #333 inset, 0 2px 2px 0 #999 inset, 0 2px 2px 0 #333;
   box-shadow: 0 0 0 1px #333 inset, 0 2px 2px 0 #999 inset, 0 2px 2px 0 #333; */
 }
