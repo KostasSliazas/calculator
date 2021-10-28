@@ -8,8 +8,7 @@
 body {
   font: 16px/1.5 'Courier New', Courier, monospace;
   padding: 0;
-  margin: 0 auto;
-  overflow: hidden;
+  margin: 0;
   background: #222
 }
 
@@ -53,6 +52,7 @@ h1 {
   font-size: 9.5vh;
   grid-gap: 2px;
   height: calc(100% - 12px);
+  overflow: hidden;
   /* border-radius: 3px; */
   /* -webkit-box-shadow: 0 0 0 1px #333 inset, 0 2px 2px 0 #999 inset, 0 2px 2px 0 #333;
   box-shadow: 0 0 0 1px #333 inset, 0 2px 2px 0 #999 inset, 0 2px 2px 0 #333; */
