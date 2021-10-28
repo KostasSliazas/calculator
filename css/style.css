@@ -5,11 +5,6 @@
   font-style: normal
 }
 
-body,
-html {
-  height: 100%
-}
-
 body {
   font: 16px/1.5 'Courier New', Courier, monospace;
   padding: 0;
