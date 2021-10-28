@@ -114,10 +114,10 @@ input::-moz-selection {
   border: 0
 }
 
-#calculator input[type=button]:active {
+/* #calculator input[type=button]:active {
   -webkit-box-shadow: 0 0 0 1px #333 inset, 0 1px 1px #999;
   box-shadow: 0 0 0 1px #333 inset, 0 1px 1px #999
-}
+} */
 
 #calculator>[data-fun=p] {
   -ms-grid-row: 5;
@@ -133,6 +133,11 @@ input::-moz-selection {
 #calculator div:empty {
   background: #999
 }
+
+#calculator input[data-fun] {
+  background: #333
+}
+
 #calculator input[data-fun=b],
 #calculator input[data-fun=clr] {
   color: #000;
@@ -147,13 +152,15 @@ input::-moz-selection {
   height: 100%;
   background: #444;
   border-radius: inherit;
-  -webkit-box-shadow: 0 0 0 1px #333 inset, 0 1px 1px #999;
-  box-shadow: 0 0 0 1px #333 inset, 0 1px 1px #999
+  /* -webkit-box-shadow: 0 0 0 1px #333 inset, 0 1px 1px #999;
+  box-shadow: 0 0 0 1px #333 inset, 0 1px 1px #999 */
 }
+
 label {
   color: #fff;
   text-indent: -999999px;
 }
+
 .switch input {
   opacity: 0;
   width: 0;
@@ -181,8 +188,8 @@ label {
   -webkit-transition: .2s;
   -o-transition: .2s;
   transition: .2s;
-  -webkit-box-shadow: 0 0 0 1px #333 inset,0 2px 2px 0 #999 inset,0 2px 2px 0 #333;
-  box-shadow: 0 0 0 1px #333 inset,0 2px 2px 0 #999 inset,0 2px 2px 0 #333;
+  /* -webkit-box-shadow: 0 0 0 1px #333 inset,0 2px 2px 0 #999 inset,0 2px 2px 0 #333;
+  box-shadow: 0 0 0 1px #333 inset,0 2px 2px 0 #999 inset,0 2px 2px 0 #333; */
   background: #777;
   content: "🔇";
   text-indent: 0;
@@ -219,7 +226,7 @@ body::after {
   grid-column-end: 5;
   margin: 0;
   box-sizing: border-box;
-  box-shadow: 0 2px 1px 0 #000 inset;
+  /* box-shadow: 0 2px 1px 0 #000 inset; */
   background: #edfaf2;
   font-family: "Numbers", monospace;
   color: #555;
