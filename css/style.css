@@ -15,7 +15,7 @@ body {
   padding: 0;
   margin: 0;
   overflow: hidden;
-  background: #000
+  background: #222
 }
 
 h1 {
@@ -60,8 +60,8 @@ h1 {
   font-size: 9.5vh;
   grid-gap: 2px;
   z-index: 1;
-  border-radius: 3px;
-  height: 95vh;
+  /* border-radius: 3px; */
+  height: calc(100vh - 12px);
   /* -webkit-box-shadow: 0 0 0 1px #333 inset, 0 2px 2px 0 #999 inset, 0 2px 2px 0 #333;
   box-shadow: 0 0 0 1px #333 inset, 0 2px 2px 0 #999 inset, 0 2px 2px 0 #333; */
 }
