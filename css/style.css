@@ -4,7 +4,9 @@
   font-weight: 400;
   font-style: normal
 }
-
+html, body{
+  height: 100%;
+}
 body {
   font: 16px/1.5 'Courier New', Courier, monospace;
   padding: 0;
