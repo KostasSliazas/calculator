@@ -17,12 +17,6 @@ h1 {
   display: none;
 }
 
-#calcwrap {
-  height: 100vh;
-  position: relative;
-  margin: 0 auto
-}
-
 /* #calcwrap {
   width: 100%;
   padding-top: 100%
