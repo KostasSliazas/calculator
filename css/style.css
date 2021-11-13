@@ -226,13 +226,12 @@ body::after {
   font-family: "Numbers", monospace;
   color: #555;
   text-align: right;
-  transition: .1s color;
   padding: 0 5px;
   /* max-height: 0; */
 }
 
 #src.blink {
-  color: #eee
+  color: transparent
 }
 
 @media screen and (min-width:768px) {
