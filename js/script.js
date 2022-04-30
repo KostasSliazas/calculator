@@ -35,7 +35,7 @@
       const n2 = num2.toString().split('.')[1]
       const len1 = (n1 && n1.length) || 0
       const len2 = (n2 && n2.length) || 0
-      if ((len1 && len2) || lastop === '-' || lastop === '+') return parseFloat(calback(Number(num1), Number(num2)).toFixed(len1 + len2))
+      if (lastop !== '/') { return parseFloat(calback(Number(num1), Number(num2)).toFixed(len1 + len2)) }
       return calback(Number(num1), Number(num2))
     }
   }
@@ -43,46 +43,52 @@
   const btn = (e) => {
     // if don't mach input or screen or esaund return
     if (!e.target.matches('input') || e.target.id === 'src' || e.target.id === 'esound') return
-    op = null
+
+    // if checked sound play that creapy sound
+    if (document.getElementById('esound').checked) sound()
+    // hide/show screen number 77 ms
+    calcScreen.classList.add('blink')
+    // hide/show screen number 77 ms
+    window.setTimeout(() => calcScreen.classList.remove('blink'), 77) // blink screen number
+
     // set operator when target is fun
     if (e.target.dataset.fun) op = e.target.value
+
     // when number pressed push to array number
     if (e.target.dataset.num) {
+      op = null
       if (n1[0] === '0' && n1[1] !== '.') n1.length = 0
       n1.push(e.target.value)
     }
+
     // operator delete last number
     if (op === '⌫') {
       n1 = result.toString(10).substring(0, 15).replace(/[^0-9]/g, '.').split('')
       n1.pop()
       n1.join('').charAt(n1.join('').length - 1) === '.' && n1.pop()
-      op = null
     }
 
+    // if no number set 0
     if (!n1.length) n1 = ['0']
     if (op === ',' && !n1.includes('.')) n1.push('.')
     result = n1.join('')
 
+    // operator is /*+-=
     if (op === '/' || op === '*' || op === '+' || op === '-' || op === '=') {
-      if (n2 && lastop) result = cal(Number(n2), Number(result), cals[lastop])
+      if (n2 && op) result = cal(Number(n2), Number(result), cals[lastop])
       n2 = result
-      n1.length = 0
       lastop = res(op)
+      n1.length = 0
     }
-
-    if (!isFinite(result)) return (calcScreen.value = 'Ooooooops!')
-
+    
+    // operator clear all
     if (op === 'C') {
       op = lastop = null
       result = n2 = n1.length = 0
-      calcScreen.value = '0'
     }
 
-    if (document.getElementById('esound').checked) sound() // if checked sound play sound
-
-    calcScreen.classList.add('blink') // hide/show screen number 9 ms
-    window.setTimeout(() => calcScreen.classList.remove('blink'), 77) // blink screen number
-    calcScreen.value = result // set result to calcScreen
+    // set result to calcScreen
+    calcScreen.value = !isFinite(result) ? 'ERROR' : result
   }
 
   calc.addEventListener('click', btn, true)
