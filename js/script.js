@@ -50,7 +50,7 @@
     calcScreen.classList.add('blink')
     // hide/show screen number 77 ms
     window.setTimeout(() => calcScreen.classList.remove('blink'), 77) // blink screen number
-
+    
     // set operator when target is fun
     if (e.target.dataset.fun) op = e.target.value
 
@@ -75,12 +75,13 @@
 
     // operator is /*+-=
     if (op === '/' || op === '*' || op === '+' || op === '-' || op === '=') {
-      if (n2 && op) result = cal(Number(n2), Number(result), cals[lastop])
-      n2 = result
+      if (n2 && lastop) result = cal(Number(n2), Number(result), cals[lastop])
+      if (lastop === op) return
       lastop = res(op)
+      n2 = result
       n1.length = 0
     }
-    
+
     // operator clear all
     if (op === 'C') {
       op = lastop = null

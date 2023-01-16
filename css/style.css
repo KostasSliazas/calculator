@@ -4,38 +4,32 @@
   font-weight: 400;
   font-style: normal
 }
-html, body{
+html{
   height: 100%;
 }
 body {
   font: 16px/1.5 'Courier New', Courier, monospace;
   padding: 0;
   margin: 0;
-  background: #222
+  background: #333;
 }
-
+body::after {
+  content: "KCalculator 1.3 by Kostas Šliažas created only for learning purposes";
+  text-align: center;
+  height: 10px;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  display: block;
+  font-size: 0;
+  color: #eee
+}
 h1 {
   display: none;
 }
 
-/* #calcwrap {
-  width: 100%;
-  padding-top: 100%
-} */
-
-/* #calcwrap .in {
-  position: absolute;
-  display: block;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  margin: auto;
-  text-align: center
-} */
 .in {
   margin: 0 auto;
-  height: 100vh;
 }
 
 #calculator {
@@ -50,57 +44,12 @@ h1 {
   -ms-flex-align: center;
   align-items: center;
   padding: 6px;
-  background: #4C4D52;
-  font-size: 9.5vh;
-  grid-gap: 2px;
+  background: #000;
+  font-size: 7vh;
+  grid-gap:3px;
   height: calc(100% - 12px);
   overflow: hidden;
-  /* border-radius: 3px; */
-  /* -webkit-box-shadow: 0 0 0 1px #333 inset, 0 2px 2px 0 #999 inset, 0 2px 2px 0 #333;
-  box-shadow: 0 0 0 1px #333 inset, 0 2px 2px 0 #999 inset, 0 2px 2px 0 #333; */
 }
-
-input {
-  -webkit-tap-highlight-color: #000
-}
-
-input::selection {
-  background: 0 0
-}
-
-input::-moz-selection {
-  background: 0 0
-}
-
-.in input {
-  border-radius: inherit;
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  width: 100%;
-  height: 100%;
-  font-size: inherit;
-  line-height: inherit;
-  position: relative;
-  cursor: pointer;
-  border: 0;
-  margin: 0;
-  outline: 0;
-  color: #ddd;
-  /* -webkit-box-shadow: 0 0 0 1px #333 inset, 0 2px 2px 0 #999 inset, 0 2px 2px 0 #333;
-  box-shadow: 0 0 0 1px #333 inset, 0 2px 2px 0 #999 inset, 0 2px 2px 0 #333; */
-  background: #1C1C1C;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  min-height: 1em;
-  transition: .1s;
-  border-radius: 0
-}
-
 #calculator input::-moz-focus-inner,
 #calculator input:focus,
 #calculator:focus {
@@ -108,11 +57,6 @@ input::-moz-selection {
   -moz-outline: 0;
   border: 0
 }
-
-/* #calculator input[type=button]:active {
-  -webkit-box-shadow: 0 0 0 1px #333 inset, 0 1px 1px #999;
-  box-shadow: 0 0 0 1px #333 inset, 0 1px 1px #999
-} */
 
 #calculator>[data-fun=p] {
   -ms-grid-row: 5;
@@ -138,6 +82,52 @@ input::-moz-selection {
   color: #000;
   background: #E3AF3F
 }
+input {
+  border-radius: inherit;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  width: 100%;
+  height: 100%;
+  font-size: inherit;
+  line-height: inherit;
+  position: relative;
+  cursor: pointer;
+  border: 0;
+  margin: 0;
+  outline: 0;
+  color: #888;
+  background: #1C1C1C;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  min-height: 1em;
+  transition: .1s;
+  border-radius: 0
+}
+
+input {
+  -webkit-tap-highlight-color: #000
+}
+
+input::selection {
+  background: 0 0
+}
+
+input::-moz-selection {
+  background: 0 0
+}
+input:active {
+  background: #000 !important;
+}
+
+label {
+  color: #fff;
+  text-indent: -999999px;
+}
 
 .switch {
   overflow: hidden;
@@ -146,14 +136,6 @@ input::-moz-selection {
   width: 100%;
   height: 100%;
   background: #444;
-  /* border-radius: inherit; */
-  /* -webkit-box-shadow: 0 0 0 1px #333 inset, 0 1px 1px #999;
-  box-shadow: 0 0 0 1px #333 inset, 0 1px 1px #999 */
-}
-
-label {
-  color: #fff;
-  text-indent: -999999px;
 }
 
 .switch input {
@@ -174,7 +156,6 @@ label {
 .slider {
   cursor: pointer;
   right: 0;
-  /* border-radius: inherit */
 }
 
 .slider:before {
@@ -183,8 +164,6 @@ label {
   -webkit-transition: .2s;
   -o-transition: .2s;
   transition: .2s;
-  /* -webkit-box-shadow: 0 0 0 1px #333 inset,0 2px 2px 0 #999 inset,0 2px 2px 0 #333;
-  box-shadow: 0 0 0 1px #333 inset,0 2px 2px 0 #999 inset,0 2px 2px 0 #333; */
   background: #777;
   content: "🔇";
   text-indent: 0;
@@ -200,43 +179,28 @@ input:checked+.slider:before {
   content: "🔊"
 }
 
-/* .round:before {
-  border-radius: 4px
-} */
-
-body::after {
-  content: "KCalculator 1.3 by Kostas Šliažas created only for learning purposes";
-  text-align: center;
-  height: 10px;
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  display: block;
-  font-size: 0;
-  color: #eee
-}
-
 #src {
   grid-column-start: 1;
   grid-column-end: 5;
   margin: 0;
   box-sizing: border-box;
-  /* box-shadow: 0 2px 1px 0 #000 inset; */
   background: #edfaf2;
   font-family: "Numbers", monospace;
   color: #555;
   text-align: right;
   padding: 0 5px;
-  /* max-height: 0; */
 }
 
 #src.blink {
   color: transparent
 }
-
+@media screen and (max-width: 768px) {
+ .in{
+    height: 100vh;
+ }
+}
 @media screen and (min-width:768px) {
   .in {
-    max-width: 450px;
-    min-width: 300px
+    max-width: 300px;
   }
 }
