@@ -12,16 +12,15 @@
   --color3: #5584b0;
   --color4: #254e7a;
   }
-html,body,.in{  
+html,body,.in,#calcwrap{  
   height:100%;  
   margin: 0 auto; 
 }
-#calcwrap{height: calc(100% - 12px)}
-  body{
-    font: 16px/1.5 "Numbers", monospace;
-    overflow: hidden;
-    background: var(--color2);
-  }
+body{
+  font: 16px/1.5 "Numbers", monospace;
+  overflow: hidden;
+  background: var(--color2);
+}
 main::after {
   content: "by Kostas Šliažas (only for learning purposes)";
   text-align: center;
