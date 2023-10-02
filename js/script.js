@@ -42,13 +42,11 @@
     }
   }
 
-  const btn = (e) => {
+  const btn = e => {
     // if don't mach input or screen or esaund return
     if (!e.target.matches('input') || e.target.id === 'src' || e.target.id === 'esound') return
-
     // if checked sound play that creapy sound
     if (document.getElementById('esound').checked) sound()
-
 
     // set operator when target is fun
     if (e.target.dataset.fun) op = e.target.value
@@ -87,9 +85,7 @@
       result = n2 = n1.length = 0
     }
     CALC_SCREEN.value = !isFinite(result) ? 'ERROR' : result
-    e.stopPropagation()
-    e.preventDefault()
-    return
+    
   }
 
   // CALC.addEventListener('click', btn, true)
@@ -152,17 +148,16 @@
     let startTime
 
     function touchStart(e) {
-      e.preventDefault()
       startXPos = e.touches[0].pageX
       startYPos = e.touches[0].pageY
       startTime = new Date()
+      e.preventStopPropagation()
 
       CALC_SCREEN.classList.add('blink')
       btn(e)
     }
 
     function touchEnd(e) {
-      e.preventDefault()
       const endXPos = e.changedTouches[0].pageX
       const endYPos = e.changedTouches[0].pageY
       const endTime = new Date()
