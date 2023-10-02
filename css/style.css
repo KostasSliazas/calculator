@@ -12,7 +12,10 @@
   --color3: #5584b0;
   --color4: #82c2e6;
   }
-  html,body{  height:100%;  }
+html,body,#calcwrap,.in{  
+  height:100%;  
+  margin: 0 auto; 
+}
   body{
     font: 16px/1.5 "Numbers", monospace;
     overflow: hidden;
@@ -30,12 +33,6 @@ main::after {
   color: var(--color4);
 }
 h1{display: none;}
-#calcwrap{
-    height:100%;
-}
-.in {
-  margin: 0 auto;
-}
 
 #calculator {
   display: -ms-grid;
@@ -163,7 +160,7 @@ input::after {
   }
 
  .in{
-  height: calc(100% - 22px);
+  height: calc(100% - 12px);
  }
 }
 @media screen and (min-width:768px) {
