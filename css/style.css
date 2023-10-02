@@ -150,10 +150,10 @@ input::after {
 }
 
 #src.blink {
-  color: var(--color2);
+  color: var(--color1);
 }
 #calculator input:active {
-  background: var(--color2) !important;
+  background: var(--color2);
 }
 @media screen and (max-width: 768px) {
   #calculator{
