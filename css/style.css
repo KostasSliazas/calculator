@@ -4,34 +4,49 @@
   font-weight: 400;
   font-style: normal
 }
+
 :root {
   --color0: #f7f3ea;
   --color1: #cbe3ef;
   --color2: #82c2e6;
   --color3: #5584b0;
   --color4: #254e7a;
-  }
-html,body,.in,#calcwrap{  
-  height:100%;  
-  margin: 0 auto; 
 }
-body{
+
+html,
+body,
+.in,
+#calcwrap {
+  height: 100%;
+  margin: 0 auto;
+}
+
+body {
   font: 16px/1.5 "Numbers", monospace;
   overflow: hidden;
   background: var(--color2);
 }
+
 main::after {
   content: "by Kostas Šliažas (only for learning purposes)";
   text-align: center;
   height: 10px;
-  position: relative;
-  bottom: 0;
+  position: absolute;
+  bottom: 2px;
   width: 100%;
   display: block;
-  font-size:.625em;
+  font-size: .625em;
   color: var(--color4);
 }
-h1{display: none;}
+
+h1 {
+  display: none;
+}
+
+.in {
+  height: calc(100% - 24px);
+  padding: 12px;
+}
 
 #calculator {
   display: -ms-grid;
@@ -43,14 +58,12 @@ h1{display: none;}
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: stretch;
-  padding: 2px;
   font-size: 2em;
-  grid-gap:2px;
+  grid-gap: 12px;
   overflow: hidden;
-  /* grid-template-rows: repeat(6, 1fr);
-  grid-template-rows: auto; */
   grid-template-rows: min-content;
 }
+
 #calculator input::-moz-focus-inner,
 #calculator input:focus,
 #calculator:focus {
@@ -80,6 +93,7 @@ h1{display: none;}
   background: var(--color3);
   color: var(--color1);
 }
+
 input {
   border-radius: inherit;
   -webkit-touch-callout: none;
@@ -102,7 +116,7 @@ input {
   -moz-appearance: none;
   appearance: none;
   transition: .1s;
-  border-radius: 0;
+  border-radius: 2px;
 }
 
 input {
@@ -117,7 +131,7 @@ input::-moz-selection {
   background: 0 0
 }
 
-#esound{
+#esound {
   font-size: .625em;
   text-align: right;
   padding: 0 .1em;
@@ -127,14 +141,17 @@ input::-moz-selection {
   place-content: center;
   display: flex;
 }
+
 input:checked::after {
   content: "sound\aon!";
 }
+
 input::after {
   content: "sound\aoff";
-  line-height:1;
+  line-height: 1;
   margin: 0 10px;
 }
+
 #src {
   grid-column-start: 1;
   grid-column-end: 5;
@@ -144,27 +161,26 @@ input::after {
   color: var(--color4);
   text-align: right;
   padding: 0 5px;
-  font-family:inherit;
-  line-height:1;
+  font-family: inherit;
+  line-height: 1;
 
 }
 
 #src.blink {
   color: var(--color1);
 }
+
 #calculator input:active {
   background: var(--color2);
 }
+
 @media screen and (max-width: 768px) {
-  #calculator{
-    height:100%;
+  #calculator {
+    height: 100%;
     font-size: 3em;
   }
-
- .in{
-  height: calc(100% - 12px);
- }
 }
+
 @media screen and (min-width:768px) {
   .in {
     max-width: 300px;
