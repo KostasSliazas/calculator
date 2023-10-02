@@ -12,9 +12,9 @@
   --color3: #5584b0;
   --color4: #82c2e6;
   }
+  html,body{  height:100%;  }
   body{
     font: 16px/1.5 "Numbers", monospace;
-    height:100%;
     overflow: hidden;
     background: var(--color2);
   }
@@ -35,7 +35,6 @@ h1{display: none;}
 }
 .in {
   margin: 0 auto;
-  height: auto;
 }
 
 #calculator {
