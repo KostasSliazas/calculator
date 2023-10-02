@@ -93,7 +93,6 @@
     // if don't mach input or screen or esaund return
     if (!e.target.matches('input') || e.target.id === 'esound') return
     if  (e.target.id === 'src'){
-      console.log('dddddd')
     ok.increment() // eslint-disable-line
     setVariables(myVariables[ok.value || 0])
     localStorage.setItem('kktheme', ok.value || 0)
