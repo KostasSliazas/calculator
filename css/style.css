@@ -39,8 +39,6 @@ h1{display: none;}
   -ms-grid-columns: 1fr 2px 1fr 2px 1fr 2px 1fr;
   grid-template-columns: repeat(4, 1fr);
   -ms-grid-rows: 1fr 2px 1fr 2px 1fr 2px 1fr 2px 1fr 2px 1fr;
-  grid-template-rows: repeat(6, 1fr);
-  grid-template-rows: auto;
   justify-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -49,6 +47,9 @@ h1{display: none;}
   font-size: 2em;
   grid-gap:2px;
   overflow: hidden;
+  /* grid-template-rows: repeat(6, 1fr);
+  grid-template-rows: auto; */
+  grid-template-rows: min-content;
 }
 #calculator input::-moz-focus-inner,
 #calculator input:focus,
