@@ -162,9 +162,7 @@ input::after {
     height:100%;
     font-size: 3em;
   }
-  #esound{
-    font-size: .25em;
-  }
+
  .in{
   height: calc(100% - 22px);
  }
