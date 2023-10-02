@@ -8,14 +8,15 @@
 :root {
   --color0: #f7f3ea;
   --color1: #cbe3ef;
-  --color2: #254e7a;
+  --color2: #82c2e6;
   --color3: #5584b0;
-  --color4: #82c2e6;
+  --color4: #254e7a;
   }
-html,body,#calcwrap,.in{  
+html,body,.in{  
   height:100%;  
   margin: 0 auto; 
 }
+#calcwrap{height: calc(100% - 12px)}
   body{
     font: 16px/1.5 "Numbers", monospace;
     overflow: hidden;
@@ -140,8 +141,8 @@ input::after {
   grid-column-end: 5;
   margin: 0 2px;
   box-sizing: border-box;
-  background: var(--color1);
-  color: var(--color2);
+  background: var(--color0);
+  color: var(--color4);
   text-align: right;
   padding: 0 5px;
   font-family:inherit;

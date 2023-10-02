@@ -10,11 +10,11 @@
         e: () => root.removeAttribute('style')
       },
       {
-        '--color0': '#fff',
-        '--color1': '#aaa',
-        '--color2': '#bbb',
-        '--color3': '#777',
-        '--color4': '#888'
+        '--color0': '#C4E79A',
+        '--color1': '#94C160',
+        '--color2': '#6B9A33',
+        '--color3': '#477413',
+        '--color4': '#294D00'
       },
       {
         '--color0': '#bdddfe',
@@ -24,7 +24,7 @@
         '--color4': '#111'
       },
       {
-        '--color0': '#aaa',
+        '--color0': '#eee',
         '--color1': '#bbb',
         '--color2': '#777',
         '--color3': '#222',
@@ -96,6 +96,9 @@
     ok.increment() // eslint-disable-line
     setVariables(myVariables[ok.value || 0])
     localStorage.setItem('kktheme', ok.value || 0)
+    // prevemts of currsor position showing (for typing)
+    e.preventDefault()
+    return
     }
     // if checked sound play that creapy sound
     if (document.getElementById('esound').checked) sound()
@@ -139,53 +142,9 @@
     CALC_SCREEN.value = !isFinite(result) ? 'ERROR' : result
     // e.stopImmediatePropagation()
     // e.stopPropagation()
-    e.preventDefault()
+    // e.preventDefault()
 
 }
-
-  // CALC.addEventListener('click', btn, true)
-
-
-  document.addEventListener('DOMContentLoaded', init)
-
-  function init() {
-    
-    setVariables(myVariables[parseInt(localStorage.getItem('kktheme')) || 0])
-
-    // everything to handle swipe left/right
-    // https://code-maven.com/swipe-left-right-vanilla-javascript
-
-    // let startXPos
-    // let startYPos
-    // let startTime
-
-    // function touchStart(e) {
-    //   e.preventDefault()
-    //   startXPos = e.touches[0].pageX
-    //   startYPos = e.touches[0].pageY
-    //   startTime = new Date()
-    // }
-
-    // function touchEnd(e) {
-    //    e.preventDefault()
-    //   const endXPos = e.changedTouches[0].pageX
-    //   const endYPos = e.changedTouches[0].pageY
-    //   const endTime = new Date()
-    //   const moveX = endXPos - startXPos
-    //   const moveY = endYPos - startYPos
-    //   const elapsedTime = endTime - startTime
-    //   if (Math.abs(moveX) > 30 && Math.abs(moveY) < 30 && elapsedTime < 1000) {
-    //     if (moveX < 0) ok.decrement() // eslint-disable-line
-    //     else ok.increment() // eslint-disable-line
-
-    //     setVariables(myVariables[ok.value || 0])
-    //     localStorage.setItem('kktheme', ok.value || 0)
-    //   }
-    // }
-    
-    // CALC_SCREEN.addEventListener('touchstart', touchStart)
-    // CALC_SCREEN.addEventListener('touchend', touchEnd)
-
     CALC.addEventListener('mousedown', e => {
       CALC_SCREEN.classList.add('blink')
       btn(e)
@@ -194,8 +153,9 @@
     CALC.addEventListener('mouseup', e => {
       setTimeout(() => CALC_SCREEN.classList.remove('blink'), 99) // blink screen number
     })
+  document.addEventListener('DOMContentLoaded', init)
 
-
-
+  function init() {    
+    setVariables(myVariables[parseInt(localStorage.getItem('kktheme')) || 0])
   }
 })()
