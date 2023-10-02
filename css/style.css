@@ -116,9 +116,7 @@ input::selection {
 input::-moz-selection {
   background: 0 0
 }
-input:active {
-  background: var(--color4) !important;
-}
+
 #esound{
   font-size: .625em;
   text-align: right;
@@ -152,6 +150,9 @@ input::after {
 
 #src.blink {
   color: var(--color4);
+}
+#calculator input:active {
+  background: var(--color2) !important;
 }
 @media screen and (max-width: 768px) {
   #calculator{
