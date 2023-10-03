@@ -87,7 +87,9 @@ h1 {
 #calculator div:empty {
   background: var(--color4);
 }
-
+#calculator input[data-fun=x] {
+filter: saturate(2) hue-rotate(160deg);
+}
 #calculator input[data-fun] {
   color: var(--color0);
   background: var(--color1);
