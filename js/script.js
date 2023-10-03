@@ -149,7 +149,6 @@
    }
 
    function init() {
-     document.body.style.display = 'none'
      setTimeout(()=>{document.body.style.display = 'block'},160)
      const NUM = parseInt(localStorage.getItem('kktheme')) || 0
      INCRISE_OBJ.value = NUM
