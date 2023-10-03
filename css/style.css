@@ -170,7 +170,7 @@ input::after {
 }
 
 #src.blink {
-  color: var(--color1);
+  color: var(--color2);
 }
 
 #calculator input:active {
