@@ -6,8 +6,13 @@
      if (typeof v[1] === 'function') return v[1]()
      root.style.setProperty(v[0], v[1])
    })
-   const myVariables = [{
-       e: () => root.removeAttribute('style')
+   const myVariables = [
+     {
+       '--color0': '#eee',
+       '--color1': '#bbb',
+       '--color2': '#777',
+       '--color3': '#222',
+       '--color4': '#000'
      },
      {
        '--color0': '#C4E79A',
@@ -24,11 +29,7 @@
        '--color4': '#111'
      },
      {
-       '--color0': '#eee',
-       '--color1': '#bbb',
-       '--color2': '#777',
-       '--color3': '#222',
-       '--color4': '#000'
+       e: () => root.removeAttribute('style')
      }
    ]
 
@@ -148,7 +149,11 @@
    }
 
    function init() {
-     setVariables(myVariables[parseInt(localStorage.getItem('kktheme')) || 0])
+     document.body.style.display = 'none'
+     setTimeout(()=>{document.body.style.display = 'block'},160)
+     const NUM = parseInt(localStorage.getItem('kktheme')) || 0
+     INCRISE_OBJ.value = NUM
+     setVariables(myVariables[INCRISE_OBJ.value])
    }
    CALC.addEventListener('mousedown', e => btn(e))
    CALC.addEventListener('mouseup', e => setTimeout(() => CALC_SCREEN.classList.remove('blink'), 99)) // blink screen number
