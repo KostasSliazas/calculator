@@ -29,7 +29,7 @@
        '--color2': '#456586',
        '--color3': '#09294a',
        '--color4': '#111',
-       '--color4': '#000'
+       '--color5': '#000'
      },
      {
        e: () => root.removeAttribute('style')
