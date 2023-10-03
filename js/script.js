@@ -8,25 +8,28 @@
    })
    const myVariables = [
      {
-       '--color0': '#eee',
-       '--color1': '#bbb',
-       '--color2': '#777',
-       '--color3': '#222',
-       '--color4': '#000'
+       '--color0': '#f5f5f5',
+       '--color1': '#d1d1d1',
+       '--color2': '#878787',
+       '--color3': '#5c5c5c',
+       '--color4': '#454545',
+       '--color5': '#262626'
      },
      {
-       '--color0': '#C4E79A',
-       '--color1': '#94C160',
-       '--color2': '#6B9A33',
-       '--color3': '#477413',
-       '--color4': '#294D00'
+       '--color0': '#eee',
+       '--color1': '#C8E0DE',
+       '--color2': '#9FB7B5',
+       '--color3': '#78908E',
+       '--color4': '#28403E',
+       '--color5': '#222'
      },
      {
        '--color0': '#bdddfe',
        '--color1': '#81a1c2',
        '--color2': '#456586',
        '--color3': '#09294a',
-       '--color4': '#111'
+       '--color4': '#111',
+       '--color4': '#000'
      },
      {
        e: () => root.removeAttribute('style')

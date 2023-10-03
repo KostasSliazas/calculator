@@ -6,11 +6,12 @@
 }
 
 :root {
-  --color0: #383829;
-  --color1: #FFFEDE;
-  --color2: #969573;
-  --color3: #2C2C12;
-  --color4: #131201;
+  --color0: #ecfeff;
+  --color1: #a5f3fc;
+  --color2: #22d3ee;
+  --color3: #0891b2;
+  --color4: #155e75;
+  --color5: #083344;     
 }
 
 html,
@@ -23,7 +24,7 @@ body,
 body {
   font: 16px/1.5 "Numbers", monospace;
   overflow: hidden;
-  background: var(--color4);
+  background: var(--color5);
 }
 
 main::after {
@@ -35,7 +36,7 @@ main::after {
   width: 100%;
   display: block;
   font-size: .625em;
-  color: var(--color4);
+  color: var(--color2);
 }
 
 h1 {
@@ -43,10 +44,10 @@ h1 {
 }
 
 .in {
-  background: var(--color3);
+  background: var(--color5);
   margin: 0 auto;
   padding: 12px;
-  border: 2px solid var(--color2);
+  border: 2px solid var(--color4);
 }
 
 #calculator {
@@ -91,8 +92,8 @@ h1 {
 filter: saturate(2) hue-rotate(160deg);
 }
 #calculator input[data-fun] {
-  color: var(--color0);
-  background: var(--color1);
+  color: var(--color1);
+  background: var(--color3);
 }
 
 input {
@@ -113,7 +114,7 @@ input {
   margin: 0;
   outline: 0;
   color: var(--color1);
-  background: var(--color2);
+  background: var(--color4);
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
@@ -160,7 +161,7 @@ input::after {
   grid-column-end: 5;
   margin: 0 2px;
   box-sizing: border-box;
-  background: var(--color1);
+  background: var(--color0);
   color: var(--color4);
   text-align: right;
   padding: 0 5px;
@@ -174,7 +175,7 @@ input::after {
 }
 
 #calculator input:active {
-  background: var(--color2);
+  background: var(--color3);
 }
 
 @media screen and (max-width: 768px) {
