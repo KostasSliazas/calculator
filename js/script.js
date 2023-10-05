@@ -13,7 +13,7 @@
        '--color2': '#878787',
        '--color3': '#5c5c5c',
        '--color4': '#454545',
-       '--color5': '#262626'
+       '--color5': '#555'
      },
      {
        '--color0': '#eee',
@@ -24,13 +24,29 @@
        '--color5': '#222'
      },
      {
-       '--color0': '#bdddfe',
-       '--color1': '#81a1c2',
-       '--color2': '#456586',
-       '--color3': '#09294a',
-       '--color4': '#111',
-       '--color5': '#000'
+       '--color0': '#222',
+       '--color1': '#14406D',
+       '--color2': '#81A1C2',
+       '--color3': '#3F6993',
+       '--color4': '#81A1C2',
+       '--color5': '#3F6993'
      },
+     {
+      '--color0': '#e7eed0',
+      '--color1': '#cad1c3',
+      '--color2': '#456586',
+      '--color3': '#948e99',
+      '--color4': '#51425f',
+      '--color5': '#2e1437'
+    },
+    {
+      '--color0': '#E8D6CB',
+      '--color1': '#D0ADA7',
+      '--color2': '#AD6A6C',
+      '--color3': '#B58DB6',
+      '--color4': '#5D2E46',
+      '--color5': '#B58DB6'
+    },
      {
        e: () => root.removeAttribute('style')
      }
@@ -148,7 +164,6 @@
      // e.stopImmediatePropagation()
      // e.stopPropagation()
      // e.preventDefault()
-
    }
 
    function init() {

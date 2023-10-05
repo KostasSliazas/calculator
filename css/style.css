@@ -19,12 +19,14 @@ body,
 #calcwrap {
   height: 100%;
   margin: 0 auto;
+  display:flex;
+  place-items:center;
 }
 
 body {
   font: 16px/1.5 "Numbers", monospace;
   overflow: hidden;
-  background: var(--color5);
+  background:var(--color0);
 }
 
 main::after {
@@ -44,10 +46,10 @@ h1 {
 }
 
 .in {
-  background: var(--color5);
+  background: var(--color4);
   margin: 0 auto;
   padding: 12px;
-  border: 2px solid var(--color4);
+  border: 2px solid var(--color3);
 }
 
 #calculator {
@@ -88,14 +90,14 @@ h1 {
 #calculator div:empty {
   background: var(--color4);
 }
-#calculator input[data-fun=x] {
-filter: saturate(2) hue-rotate(160deg);
-}
+
 #calculator input[data-fun] {
-  color: var(--color1);
+  color: var(--color0);
   background: var(--color3);
 }
-
+#calculator input[data-fun=x] {
+  background: var(--color5);
+}
 input {
   border-radius: inherit;
   -webkit-touch-callout: none;
@@ -113,8 +115,8 @@ input {
   border: 0;
   margin: 0;
   outline: 0;
-  color: var(--color1);
-  background: var(--color4);
+  color: var(--color4);
+  background: var(--color1);
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
@@ -136,7 +138,7 @@ input::-moz-selection {
 }
 
 #esound {
-  font-size: .625em;
+  font-size: .3755em;
   text-align: right;
   padding: 0 .1em;
   overflow: hidden;
@@ -144,6 +146,7 @@ input::-moz-selection {
   place-items: center;
   place-content: center;
   display: flex;
+  font-weight:700;
 }
 
 input:checked::after {
@@ -167,17 +170,18 @@ input::after {
   padding: 0 5px;
   font-family: inherit;
   line-height: 1;
-
 }
 
 #src.blink {
-  color: var(--color2);
+  color: var(--color1);
 }
 
 #calculator input:active {
   background: var(--color3);
 }
-
+#calculator input[data-fun]:active {
+  background: var(--color4);
+}
 @media screen and (max-width: 768px) {
   #calculator {
     height: 100%;
