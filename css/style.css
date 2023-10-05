@@ -17,10 +17,9 @@
 html,
 body,
 #calcwrap {
+  width: 100%;
   height: 100%;
   margin: 0 auto;
-  display:flex;
-  place-items:center;
 }
 
 body {
@@ -48,6 +47,7 @@ h1 {
 .in {
   background: var(--color4);
   margin: 0 auto;
+  height: calc(100% - 28px);
   padding: 12px;
   border: 2px solid var(--color3);
 }
@@ -66,6 +66,7 @@ h1 {
   font-size: 2em;
   grid-gap: 12px;
   overflow: hidden;
+  height: 100%;
 }
 
 #calculator input::-moz-focus-inner,
@@ -182,19 +183,11 @@ input::after {
 #calculator input[data-fun]:active {
   background: var(--color4);
 }
-@media screen and (max-width: 768px) {
-  #calculator {
-    height: 100%;
-    font-size: 3em;
-  }
-
-  .in {
-    height: calc(100% - 28px);
-  }
-}
 
 @media screen and (min-width:768px) {
   .in {
+    border-radius: 2px;
     max-width: 300px;
+    height: auto;
   }
 }
