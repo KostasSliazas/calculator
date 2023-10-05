@@ -50,6 +50,7 @@ h1 {
   height: calc(100% - 28px);
   padding: 12px;
   border: 2px solid var(--color3);
+  font-size: 3em;
 }
 
 #calculator {
@@ -63,7 +64,6 @@ h1 {
   grid-template-rows: min-content;
   justify-items: center;
   align-items: stretch;
-  font-size: 2em;
   grid-gap: 12px;
   overflow: hidden;
   height: 100%;
@@ -189,5 +189,6 @@ input::after {
     border-radius: 2px;
     max-width: 300px;
     height: auto;
+    font-size: 2em;
   }
 }
