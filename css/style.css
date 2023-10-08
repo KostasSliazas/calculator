@@ -61,6 +61,16 @@
     --color4: #140B14;
   }
 
+  .f input[data-fun] {
+    color: var(--color2);
+    background: var(--color1);
+  }
+
+  .f input[data-fun]:active {
+    background: var(--color0);
+    color: var(--color3);
+  }
+
   .g {
     --color0: #96957A;
     --color1: #96957A;
@@ -76,6 +86,7 @@
     --color3: #53708E;
     --color4: #244366;
   }
+
   .k {
     --color0: #fff;
     --color1: #fff;
@@ -83,17 +94,29 @@
     --color3: #5E5F5F;
     --color4: #929292;
   }
+
+  .l {
+    --color0: #999;
+    --color1: #999;
+    --color3: #fff;
+    --color2: #eee;
+    --color4: #555;
+  }
+
   .k input+input {
     color: var(--color3);
     background: var(--color1);
   }
+
   .c.h input+input {
     border-radius: 7px;
     box-shadow: 0 -1px 3px 0 var(--color0), 0 0 1px 0 var(--color4);
   }
-.c.h input:first-child{
-  box-shadow: 0 1px 1px var(--color0) inset, 0 -1px 0 var(--color4);
-}
+
+  .c.h input:first-child {
+    box-shadow: 0 1px 1px var(--color0) inset, 0 -1px 0 var(--color4);
+  }
+
   .j input+input[type=checkbox],
   .j input+input[type=button] {
     border-radius: 3em;
