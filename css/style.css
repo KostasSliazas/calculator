@@ -216,7 +216,7 @@ input::after {
   color: var(--color1);
 }
 
-#calculator input + input:active {
+#calculator input[type=button]:active {
   background: var(--color3);
 }
 #calculator input[data-fun]:active {
