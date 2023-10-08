@@ -7,13 +7,53 @@
 
 :root {
   --color0: #ecfeff;
-  --color1: #a5f3fc;
+  --color1: #d0faff;
   --color2: #22d3ee;
   --color3: #0891b2;
   --color4: #155e75;
-  --color5: #083344;     
 }
-
+.a{
+--color0: #FCFCFC;
+--color1: #C0B7BC;
+--color2: #8B7B84;
+--color3: #5D4A55;
+--color4: #411C31;
+}
+.b{
+--color0: #FFFFFF;	
+--color1: #EFEBE4;
+--color2: #ADA699;	
+--color3: #746B5C;
+--color4: #514123;
+}
+.c{
+--color0: #FFFFFF;
+--color1: #E0EAD4;
+--color2: #9DB482;
+--color3: #668344;
+--color4: #2B4809;
+}
+.d{
+--color0: #F7F7F7;
+--color1: #9FA2B0;
+--color2: #666D87;
+--color3: #3C4566;
+--color4: #161F43;
+}
+.e{
+--color0: #FFFDFD;
+--color1: #D2CECE;
+--color2: #9B9797;
+--color3: #656060;
+--color4: #201B1B;
+}
+.f{
+--color0: #0A010A;
+--color1: #282429;
+--color2: #847885;
+--color3: #DFD6DF;
+--color4: #140B14;
+}
 html,
 body,
 #calcwrap {
@@ -25,7 +65,7 @@ body,
 body {
   font: 16px/1.5 "Numbers", monospace;
   overflow: hidden;
-  background:var(--color0);
+  background:var(--color3);
 }
 
 main::after {
@@ -45,11 +85,11 @@ h1 {
 }
 
 .in {
-  background: var(--color4);
+  background: var(--color2);
   margin: 0 auto;
   height: calc(100% - 28px);
   padding: 12px;
-  border: 2px solid var(--color3);
+  border: 2px solid var(--color4);
   font-size: 3em;
 }
 
@@ -92,13 +132,6 @@ h1 {
   background: var(--color4);
 }
 
-#calculator input[data-fun] {
-  color: var(--color0);
-  background: var(--color3);
-}
-#calculator input[data-fun=x] {
-  background: var(--color5);
-}
 input {
   border-radius: inherit;
   -webkit-touch-callout: none;
@@ -116,8 +149,8 @@ input {
   border: 0;
   margin: 0;
   outline: 0;
-  color: var(--color4);
-  background: var(--color1);
+  color: var(--color2);
+  background: var(--color4);
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
@@ -125,7 +158,13 @@ input {
   border-radius: 2px;
   font-family: inherit;
 }
-
+#calculator input[data-fun] {
+  background: var(--color3);
+  color: var(--color1);
+}
+.a #calculator input[data-fun=x] {
+  filter: hue-rotate(160deg)
+}
 input {
   -webkit-tap-highlight-color: #000
 }
@@ -166,7 +205,7 @@ input::after {
   margin: 0 2px;
   box-sizing: border-box;
   background: var(--color0);
-  color: var(--color4);
+  color: var(--color3);
   text-align: right;
   padding: 0 5px;
   font-family: inherit;
