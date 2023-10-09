@@ -123,6 +123,10 @@
   aspect-ratio: 1;
 }
 
+.j #calculator {
+  height: auto;
+}
+
 .s #calculator {
   grid-gap: 2px;
 }
