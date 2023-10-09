@@ -1,11 +1,11 @@
 /* jshint esversion: 8 */
 (function () {
-  ("use strict");
+  "use strict";
   const random = (min, max) => Math.floor(Math.random() * (max - min)) + min;
   // for theme changing
   const root = document.documentElement;
-  // these will add class name to html tag or remove if 0
-  const classNameVariables = [0, "a", "b", "c", "d", "e", "f", "g", "h", "c h", "c h j", "c h k", "c h l"];
+  // these will add class name to html tag or remove if 0 and set default
+  const classNameVariables = [0, "a s", "b", "c s", "d", "e s", "f", "g", "h", "c h", "c h j", "c h k", "c h l"];
 
   var arrayHelper = function () {
     var ob = {};
