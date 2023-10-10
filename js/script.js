@@ -5,7 +5,7 @@
   // for theme changing
   const root = document.documentElement;
   // these will add class name to html tag or remove if 0 and set default
-  const classNameVariables = [0, "a s", "b", "c s", "d", "e s", "f", "g", "h", "c h", "c h j", "c h k", "c h l"];
+  const classNameVariables = [0, "a s", "b", "c s", "d o", "e s", "f", "g", "h", "c h", "c h j o", "c h k o", "c h l"];
 
   var arrayHelper = function () {
     var ob = {};

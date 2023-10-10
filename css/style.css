@@ -72,11 +72,11 @@
 }
 
 .g {
-  --color0: #96957a;
-  --color1: #96957a;
-  --color2: #656457;
-  --color3: #3d3d37;
-  --color4: #585618;
+  --color0: #f9f8ee;
+  --color1: #e8e7da;
+  --color2: #2c2c2b;
+  --color3: #60605c;
+  --color4: #131310;
 }
 
 .h {
@@ -116,11 +116,12 @@
 .c.h input:first-child {
   box-shadow: 0 1px 1px var(--color0) inset, 0 -1px 0 var(--color4);
 }
-
+.g input + input[type="checkbox"],
+.g input + input[type="button"],
 .j input + input[type="checkbox"],
 .j input + input[type="button"] {
-  border-radius: 3em;
   aspect-ratio: 1;
+  font-size: 22px;
 }
 
 .j #calculator {
@@ -130,7 +131,10 @@
 .s #calculator {
   grid-gap: 2px;
 }
-
+.o input + input[type="checkbox"],
+.o input + input[type="button"] {
+  border-radius: 3em;
+}
 html,
 body,
 #calcwrap {
