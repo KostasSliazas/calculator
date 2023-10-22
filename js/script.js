@@ -5,7 +5,9 @@
   // for theme changing
   const root = document.documentElement;
   // these will add class name to html tag or remove if 0 and set default
-  const classNameVariables = [0, "a s", "b", "c s", "d o", "e s", "f", "g", "h", "c h", "c h j o", "c h k o", "c h l"];
+  // a,b,c,d,e,f,g,h,i,j,k --- colors classes
+  // l, m, n, o, p, q --- styles for diferent border fontžsize etc.
+  const classNameVariables = [0, "a", "b", "c", "d", "e l", "f", "g", "h l", "i n", "j n p", "k o p", "e l q"];
 
   var arrayHelper = function () {
     var ob = {};

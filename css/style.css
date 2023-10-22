@@ -61,16 +61,6 @@
   --color4: #140b14;
 }
 
-.f input[data-fun] {
-  color: var(--color2);
-  background: var(--color1);
-}
-
-.f input[data-fun]:active {
-  background: var(--color0);
-  color: var(--color3);
-}
-
 .g {
   --color0: #f9f8ee;
   --color1: #e8e7da;
@@ -78,7 +68,6 @@
   --color3: #60605c;
   --color4: #131310;
 }
-
 .h {
   --color0: #c9d3de;
   --color1: #fcfdfd;
@@ -87,7 +76,7 @@
   --color4: #244366;
 }
 
-.k {
+.i {
   --color0: #fff;
   --color1: #fff;
   --color2: #eee;
@@ -95,7 +84,7 @@
   --color4: #999;
 }
 
-.l {
+.j {
   --color0: #999;
   --color1: #999;
   --color3: #fff;
@@ -103,38 +92,54 @@
   --color4: #555;
 }
 
-.k input + input {
+.k {
+  --color0: #999;
+  --color1: #999;
+  --color3: #fff;
+  --color2: #eee;
+  --color4: #555;
+}
+
+.l input[data-fun] {
   color: var(--color3);
   background: var(--color1);
 }
 
-.c.h input + input {
+.l input[data-fun]:active {
+  background: var(--color0);
+}
+
+.m input + input {
+  color: var(--color3);
+  background: var(--color1);
+}
+
+.n input + input {
   border-radius: 7px;
   box-shadow: 0 -1px 3px 0 var(--color0), 0 0 1px 0 var(--color4);
 }
 
-.c.h input:first-child {
+.n input:first-child {
   box-shadow: 0 1px 1px var(--color0) inset, 0 -1px 0 var(--color4);
-}
-.g input + input[type="checkbox"],
-.g input + input[type="button"],
-.j input + input[type="checkbox"],
-.j input + input[type="button"] {
-  aspect-ratio: 1;
-  font-size: 22px;
-}
-
-.j #calculator {
-  height: auto;
-}
-
-.s #calculator {
-  grid-gap: 2px;
 }
 .o input + input[type="checkbox"],
 .o input + input[type="button"] {
   border-radius: 3em;
 }
+.p input + input[type="checkbox"],
+.p input + input[type="button"] {
+  aspect-ratio: 1;
+  font-size: 22px;
+}
+
+.p #calculator {
+  height: auto;
+}
+
+.q #calculator {
+  gap: 2px;
+}
+
 html,
 body,
 #calcwrap {
@@ -185,7 +190,7 @@ h1 {
   grid-template-rows: min-content;
   justify-items: center;
   align-items: stretch;
-  grid-gap: 12px;
+  gap: 12px;
   height: 100%;
 }
 
