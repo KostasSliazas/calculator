@@ -45,6 +45,7 @@ A simple and responsive calculator built using vanilla JavaScript, HTML, and CSS
 └── jsconfig.json
 
 
+
 ## Contributing
 
 Feel free to fork this repository and submit pull requests. Contributions are welcome!
