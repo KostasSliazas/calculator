@@ -6,8 +6,8 @@ A simple and responsive calculator built using vanilla JavaScript, HTML, and CSS
 
 - **Basic Operations**: Supports addition, subtraction, multiplication, and division.
 - **Responsive Design**: Optimized for different screen sizes.
-- **Theme Switching**: Toggle between light and dark themes.
-- **Keyboard Support**: Perform calculations using keyboard input.
+- **Theme Switching**: Toggle between themes by click on screen.
+- **Keyboard Support**: -
 - **Clean Code**: Follows the BEM methodology for CSS structure and uses vanilla JavaScript for functionality.
 
 ## Technologies Used
