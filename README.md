@@ -28,11 +28,11 @@ A simple and responsive calculator built using **vanilla JavaScript**, **HTML**,
    ```bash
    git clone https://github.com/KostasSliazas/calculator.git
    ```
-2. **Navigate to the project directory:
+2. **Navigate to the project directory:**
    ```bash
    cd calculator
    ```
-2. **Open the index.html file in your preferred browser.
+3. **Open the index.html file in your preferred browser.**
 
 ## Project Structure
 
