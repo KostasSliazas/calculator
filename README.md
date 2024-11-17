@@ -24,6 +24,7 @@ A simple and responsive calculator built using vanilla JavaScript, HTML, and CSS
 
 ## Project Structure
 
+```
 ├── index.html
 ├── css/
 │   ├── style.css
@@ -43,7 +44,7 @@ A simple and responsive calculator built using vanilla JavaScript, HTML, and CSS
 ├── sw.js
 ├── LICENSE
 └── jsconfig.json
-
+```
 
 
 ## Contributing
