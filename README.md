@@ -43,10 +43,6 @@ A simple and responsive calculator built using **vanilla JavaScript**, **HTML**,
 ├── js/
 │   ├── script.js
 │   └── script.min.js
-├── .vscode/
-│   ├── launch.json
-│   ├── extensions.json
-│   └── settings.json
 ├── apple-touch-icon.png
 ├── android-chrome-192x192.png
 ├── android-chrome-512x512.png
