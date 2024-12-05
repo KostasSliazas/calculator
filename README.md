@@ -1,6 +1,6 @@
 # **Calculator Project**
 
-A simple and responsive calculator built using **vanilla JavaScript**, **HTML**, and **CSS**. This project follows the **BEM methodology** for styling and includes theme-changing functionality. The theme will change every time unless you click on the screen to manually select it.
+A simple and responsive calculator built using **vanilla JavaScript**, **HTML**, and **CSS**. This project follows the **BEM methodology** for styling and includes theme-changing functionality. The theme will change every time unless you click on the screen to manually select it. This is one of honest calculators. Why? 100/3*3 =]
 
 ---
 
