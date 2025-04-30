@@ -123,7 +123,7 @@
 
     if (!n1.length) n1 = ["0"]; // Ensure there's always a number displayed
     if (op === "," && !n1.includes(".")) n1.push("."); // Add decimal point if not already present
-    result = n1.join(""); // Update the result with the current input
+   
     // Perform the calculation when an operator is pressed
 if (Object.keys(cals).includes(op)) {
 
@@ -132,6 +132,8 @@ if (Object.keys(cals).includes(op)) {
   if (n1.length === 1 && n1[0] === "0") return;
   n2 = result;
   n1.length = 0;
+} else {
+   result = n1.join(""); // Update the result with the current input
 }
 
 
