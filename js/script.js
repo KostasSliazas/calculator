@@ -128,13 +128,14 @@
     result = n1.join(""); // Update the result with the current input
 
     // Perform the calculation when an operator is pressed
-    if (Object.keys(cals).includes(op)) {
-      if (lastop) result = cal(Number(n2), Number(result), cals[lastop]); // Perform the calculation
-      lastop = op; // Update the last operation
-      if (n1[0] === "0" && n1.length === 1) return; // Prevent recalculating zero
-      n2 = result; // Store the result for the next calculation
-      n1.length = 0; // Reset input array
-    }
+if (Object.keys(cals).includes(op)) {
+  if (lastop) result = cal(Number(n2), Number(result), cals[lastop]);
+  lastop = op;
+  if (!n2 && n1.length === 1 && n1[0] === "0") return;
+  n2 = result;
+  n1.length = 0;
+}
+
 
     // Reset the calculator when 'C' is pressed
     if (op === "C") {
