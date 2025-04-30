@@ -129,7 +129,7 @@ if (Object.keys(cals).includes(op)) {
 
   if (lastop) result = cal(Number(n2), Number(result), cals[lastop]);
   lastop = op;
-  if (n1.length === 1 && n1[0] === "0") return;
+ // if (n1.length === 1 && n1[0] === "0") return;
   n2 = result;
   n1.length = 0;
 } else {
