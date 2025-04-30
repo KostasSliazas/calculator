@@ -129,9 +129,9 @@
     // Perform the calculation when an operator is pressed
 if (Object.keys(cals).includes(op)) {
   result = n1.join(""); // Update the result with the current input
-  if (lastop) result = cal(Number(n2), Number(result), cals[lastop]);
+  if (n2 && lastop) result = cal(Number(n2), Number(result), cals[lastop]);
   lastop = op;
-  if (!n2 && n1.length === 1 && n1[0] === "0") return;
+  if (n1.length === 1 && n1[0] === "0") return;
   n2 = result;
   n1.length = 0;
 }
