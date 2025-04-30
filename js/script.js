@@ -105,13 +105,11 @@
 
     // Check if the button is a number and append it to n1 (input number)
     if (!isNaN(parseFloat(buttonValue))) {
-      op = null; // Reset the operator
-      if (n1[0] === "0" && n1[1] !== ".") n1.length = 0; // Remove leading zero unless it's a decimal
-      n1.push(buttonValue);
-    } else {
-      op = buttonValue; // Assign the operator
+  if (n1[0] === "0" && n1[1] !== ".") n1.length = 0;
+  n1.push(buttonValue);
+  result = n1.join("");
+  return; 
     }
-
     // Handle backspace operation (⌫)
     if (op === "⌫") {
       n1 = result
