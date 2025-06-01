@@ -52,6 +52,7 @@
   let previousValue = null; // Stores the first operand for a calculation
   let operator = null; // Stores the pending operator (+, -, x, ÷)
   let equalsPressed = false; // Flag to indicate if equals was the last action
+  let lastOperandForEquals = null; // Stores the second operand for chained equals
 
   // Define mathematical functions for the calculator
   const add = (n, o) => n + o;
@@ -83,7 +84,9 @@
     const num2DecimalPlaces = (num2.toString().split('.')[1] || '').length;
     const maxDecimalPlaces = Math.max(num1DecimalPlaces, num2DecimalPlaces);
 
-    return parseFloat(result.toFixed(maxDecimalPlaces));
+    // Use toFixed only if there are decimal places, otherwise just return the number
+    // This avoids unnecessary .000 on integers
+    return maxDecimalPlaces > 0 ? parseFloat(result.toFixed(maxDecimalPlaces)) : result;
   };
 
   // Event handler for button clicks (numbers and operations)
@@ -100,21 +103,23 @@
 
     const buttonValue = e.target.value;
 
-    // --- Handle Number and Decimal Input ---
+    // --- Handle Number Input ---
     if (!isNaN(parseFloat(buttonValue))) { // It's a digit
-      if (currentInput === "0" || equalsPressed || previousValue !== null && operator !== null && currentInput === previousValue.toString()) {
+      if (currentInput === "0" || equalsPressed || (operator !== null && previousValue !== null && currentInput === previousValue.toString())) {
         // Start a new number if:
         // - current display is just "0"
         // - equals was just pressed
-        // - an operator was just pressed and no new number typed yet
+        // - an operator was just pressed and no new number typed yet (currentInput is still the previousValue)
         currentInput = buttonValue;
-        equalsPressed = false;
       } else {
         currentInput += buttonValue;
       }
-      operator = null; // Clear pending operator as a number is being typed
-    } else if (buttonValue === ",") { // It's a decimal point
-        if (equalsPressed) {
+      equalsPressed = false; // Typing a digit resets equals state
+      operator = null; // Typing a digit clears any pending operator
+    }
+    // --- Handle Decimal Point Input ---
+    else if (buttonValue === ",") {
+        if (equalsPressed || currentInput === "0") {
             currentInput = "0.";
             equalsPressed = false;
         } else if (!currentInput.includes(".")) {
@@ -123,35 +128,37 @@
     }
     // --- Handle Operator Input (+, -, ×, ÷) ---
     else if (cals.hasOwnProperty(buttonValue)) {
-        if (previousValue !== null && operator !== null && !equalsPressed) {
-            // If there's a pending operation and a new number has been entered,
-            // or an operator was just pressed again (changing operator)
-            if (currentInput !== previousValue.toString()) { // Only calculate if current input is different from previousValue
-                currentInput = calculate(previousValue, currentInput, cals[operator]).toString();
+        if (previousValue !== null && operator !== null) { // If there's an ongoing calculation
+            if (!equalsPressed) { // If equals was not pressed, means we're chaining operations or changing operator
+                if (currentInput !== previousValue.toString()) { // Only calculate if a new number has been entered
+                    currentInput = calculate(previousValue, currentInput, cals[operator]).toString();
+                }
+            } else { // If equals was just pressed, the current result is the new previousValue
+                previousValue = Number(currentInput);
             }
+        } else { // First operator in a sequence
+            previousValue = Number(currentInput); // Store current display as the first operand
         }
-        previousValue = Number(currentInput); // Store current display as the first operand for the next calculation
         operator = buttonValue; // Set the new pending operator
         equalsPressed = false; // Reset equals flag
     }
     // --- Handle Equals (=) ---
     else if (buttonValue === "=") {
-        if (previousValue !== null && operator !== null) {
-            let num2;
-            if (equalsPressed) {
-                // Chained equals (e.g., 5 + 3 = =). num2 should be the last operand.
-                num2 = Number(CALC_SCREEN.textContent); // This was previously result, so it's the A in A op B =
-                currentInput = calculate(currentInput, previousValue, cals[operator]).toString(); // Re-apply current result with the stored second operand
-            } else {
-                num2 = Number(currentInput);
-                currentInput = calculate(previousValue, num2, cals[operator]).toString();
-                previousValue = num2; // Store the second operand for chained equals
-            }
-            equalsPressed = true;
-        } else {
-            // If equals is pressed with no operation pending, just show current input as result
-            equalsPressed = true; // Still mark equals as pressed
+        if (operator !== null) { // Only calculate if there's a pending operator
+            let operand2 = equalsPressed ? lastOperandForEquals : Number(currentInput);
+
+            if (previousValue === null) previousValue = Number(currentInput); // Fallback for edge cases where previousValue isn't set
+
+            currentInput = calculate(previousValue, operand2, cals[operator]).toString();
+            lastOperandForEquals = operand2; // Store for chained equals
+            previousValue = Number(currentInput); // Update previousValue to the result for further chaining
+            operator = null; // Clear operator after equals
+        } else if (equalsPressed && lastOperandForEquals !== null) {
+            // Chained equals with no new operator, re-apply previous operation
+            currentInput = calculate(previousValue, lastOperandForEquals, cals[operator]).toString();
+            previousValue = Number(currentInput); // Update previousValue to the new result
         }
+        equalsPressed = true;
     }
     // --- Handle Clear (C) ---
     else if (buttonValue === "C") {
@@ -159,21 +166,22 @@
         previousValue = null;
         operator = null;
         equalsPressed = false;
+        lastOperandForEquals = null; // Ensure this is cleared too
     }
     // --- Handle Backspace (⌫) ---
     else if (buttonValue === "⌫") {
-        if (currentInput.length > 1 && !equalsPressed) {
-            currentInput = currentInput.slice(0, -1);
-            if (currentInput === "") currentInput = "0"; // If backspace empties, set to "0"
-        } else {
-            currentInput = "0";
-        }
-        // If backspace after equals, revert to default clear state
         if (equalsPressed) {
-             currentInput = "0";
-             previousValue = null;
-             operator = null;
-             equalsPressed = false;
+            // If backspace after equals, revert to default clear state
+            currentInput = "0";
+            previousValue = null;
+            operator = null;
+            equalsPressed = false;
+            lastOperandForEquals = null;
+        } else if (currentInput.length > 1 && currentInput !== "0") {
+            currentInput = currentInput.slice(0, -1);
+            if (currentInput === "" || currentInput === "-") currentInput = "0"; // Handle empty string or just "-"
+        } else {
+            currentInput = "0"; // If only one digit or "0", revert to "0"
         }
     }
 
@@ -196,7 +204,7 @@
     if ("serviceWorker" in navigator) {
       try {
         navigator.serviceWorker
-          .register("/project-k/calculator/sw.js?v=1")
+          .register('/project-k/calculator/sw.js?v=1')
           .then((registration) => {
             console.log('Service Worker registered with scope:', registration.scope);
           })
@@ -215,9 +223,6 @@
 
     // Event listeners for mouse and theme changes
     CALC.addEventListener("mousedown", (e) => btn(e));
-
-    // Remove blink effect after button release (moved into btn function for direct control)
-    // CALC.addEventListener("mouseup", (e) => { ... });
 
     // Increment the theme on screen click
     CALC_SCREEN.addEventListener("click", (e) => {
