@@ -48,19 +48,16 @@
     else root.removeAttribute("class");
   };
 
-  let n1 = []; // Stores the current input number (as array of chars)
-  let n2 = 0; // Stores the first operand of the current operation
-  let op = null; // Stores the currently selected operator (e.g., '+', '-', etc.)
-  let lastop = null; // Stores the operator from the previous calculation for chaining
-  let result = 0; // Stores the calculated result
-  let newNumberReady = false; // Flag: true if the next digit should start a new number
+  let currentInput = "0"; // What the user is currently typing/displaying
+  let previousValue = null; // Stores the first operand for a calculation
+  let operator = null; // Stores the pending operator (+, -, x, ÷)
+  let equalsPressed = false; // Flag to indicate if equals was the last action
 
   // Define mathematical functions for the calculator
   const add = (n, o) => n + o;
   const sub = (n, o) => n - o;
   const div = (n, o) => n / o;
   const mul = (n, o) => n * o;
-  const res = (n) => n; // Renamed to 'res' to avoid conflict with 'result' variable
 
   // Map operators to corresponding mathematical functions
   const cals = {
@@ -68,34 +65,25 @@
     "×": mul,
     "+": add,
     "-": sub,
-    "=": res,
   };
 
-  // Perform the calculation based on num1, num2, and the callback operator
-  const cal = (num1, num2, calback) => {
-    if (typeof calback === "function") {
-      // Ensure num1 and num2 are treated as numbers
-      const n1Val = Number(num1);
-      const n2Val = Number(num2);
+  // Perform the calculation
+  const calculate = (num1, num2, opFunc) => {
+    num1 = Number(num1);
+    num2 = Number(num2);
 
-      const n1Str = n1Val.toString();
-      const n2Str = n2Val.toString();
-      const len1 = (n1Str.includes(".") ? n1Str.split(".")[1].length : 0);
-      const len2 = (n2Str.includes(".") ? n2Str.split(".")[1].length : 0);
-      const maxDecimals = Math.max(len1, len2);
-
-      // Handle division separately for precision and zero division
-      if (calback === div) {
-        if (n2Val === 0) return NaN; // Division by zero
-        return n1Val / n2Val;
-      }
-      
-      // For other operations, apply toFixed to handle floating point inaccuracies
-      // Use a more robust toFixed to avoid issues with very small numbers
-      const calculatedResult = calback(n1Val, n2Val);
-      return parseFloat(calculatedResult.toFixed(maxDecimals));
+    if (opFunc === div && num2 === 0) {
+      return "ERROR"; // Handle division by zero
     }
-    return Number(num2); // If no valid callback, return the second number (e.g., for '=' with no preceding op)
+
+    const result = opFunc(num1, num2);
+
+    // Attempt to handle floating point precision
+    const num1DecimalPlaces = (num1.toString().split('.')[1] || '').length;
+    const num2DecimalPlaces = (num2.toString().split('.')[1] || '').length;
+    const maxDecimalPlaces = Math.max(num1DecimalPlaces, num2DecimalPlaces);
+
+    return parseFloat(result.toFixed(maxDecimalPlaces));
   };
 
   // Event handler for button clicks (numbers and operations)
@@ -113,118 +101,90 @@
     const buttonValue = e.target.value;
 
     // --- Handle Number and Decimal Input ---
-    if (!isNaN(parseFloat(buttonValue)) || buttonValue === ",") {
-      // If a new number is expected (after operator or equals)
-      if (newNumberReady) {
-        n1 = []; // Clear n1 to start fresh
-        newNumberReady = false;
-      }
-
-      // Handle decimal point input
-      if (buttonValue === ",") {
-        if (!n1.includes(".")) { // Only add decimal if not already present
-          if (!n1.length) { // If ',' is the first input or after an operator, make it "0."
-            n1.push("0");
-          }
-          n1.push(".");
-        }
-      } else { // It's a digit (0-9)
-        if (n1.length === 1 && n1[0] === "0" && buttonValue !== "0" && !n1.includes(".")) {
-          // Replace leading "0" with a new digit, unless it's "0" or decimal is present
-          n1[0] = buttonValue;
-        } else if (!(n1.length === 0 && buttonValue === "0" && !n1.includes("."))) {
-          // Prevent multiple leading zeros (e.g., 001) but allow 0.something
-          n1.push(buttonValue);
-        }
-      }
-      result = n1.join(""); // Update result with the current number being typed
-      op = null; // Clear any pending operator when a number is typed
-    }
-    // --- Handle Operator Input ---
-    else if (Object.keys(cals).includes(buttonValue)) {
-      op = buttonValue; // Set the current operator
-
-      if (lastop && lastop !== "=") { // If there was a pending operation (not "=" from last press)
-        if (n1.length > 0 && !newNumberReady) {
-          // If a new number was entered (second operand)
-          n2 = cal(n2, Number(n1.join("")), cals[lastop]);
-          result = n2; // Update result and n2 with the calculation
-        }
-        // If an operator is pressed immediately after another operator (e.g., 5 + *),
-        // and no new number was typed, just update lastop without calculating.
-      } else if (n1.length > 0) {
-        // If this is the very first number and operator, or after "="
-        n2 = Number(n1.join("")); // Store n1 as the first operand for the next calculation
-        result = n2; // Display this as the "result" for now
+    if (!isNaN(parseFloat(buttonValue))) { // It's a digit
+      if (currentInput === "0" || equalsPressed || previousValue !== null && operator !== null && currentInput === previousValue.toString()) {
+        // Start a new number if:
+        // - current display is just "0"
+        // - equals was just pressed
+        // - an operator was just pressed and no new number typed yet
+        currentInput = buttonValue;
+        equalsPressed = false;
       } else {
-        // If an operator is pressed before any number, or immediately after an equals
-        // but no new number was entered, just keep the current result/n2 as is.
+        currentInput += buttonValue;
       }
-
-      lastop = op; // The current operator becomes the last operator for the next calculation
-      newNumberReady = true; // Signal that the next digit input should start a new number
-    }
-
-    // --- Special Operator Handling: Clear (C) and Backspace (⌫) ---
-    if (op === "C") {
-      n1 = [];
-      n2 = 0;
-      op = null;
-      lastop = null;
-      result = 0;
-      newNumberReady = false;
-    } else if (op === "⌫") {
-      if (newNumberReady) {
-        // If backspace pressed immediately after an operator,
-        // it means the user wants to edit the previous result.
-        newNumberReady = false; // Allow editing
-        op = null; // Clear operator state
-        lastop = null; // Clear last operator state for fresh start
-        n1 = result.toString().split(""); // Populate n1 with the last result for editing
-        if (n1.length > 0) { // Ensure there's something to pop
-          n1.pop(); // Remove the last character
+      operator = null; // Clear pending operator as a number is being typed
+    } else if (buttonValue === ",") { // It's a decimal point
+        if (equalsPressed) {
+            currentInput = "0.";
+            equalsPressed = false;
+        } else if (!currentInput.includes(".")) {
+            currentInput += ".";
         }
-      } else {
-        n1.pop(); // Remove the last character from current input
-      }
-
-      // Handle trailing decimal point after backspace
-      if (n1.length > 0 && n1[n1.length - 1] === ".") {
-        n1.pop();
-      }
-
-      if (!n1.length) {
-        n1 = ["0"]; // If n1 is empty, set it to "0"
-      }
-      result = n1.join(""); // Update result with the modified n1
+    }
+    // --- Handle Operator Input (+, -, ×, ÷) ---
+    else if (cals.hasOwnProperty(buttonValue)) {
+        if (previousValue !== null && operator !== null && !equalsPressed) {
+            // If there's a pending operation and a new number has been entered,
+            // or an operator was just pressed again (changing operator)
+            if (currentInput !== previousValue.toString()) { // Only calculate if current input is different from previousValue
+                currentInput = calculate(previousValue, currentInput, cals[operator]).toString();
+            }
+        }
+        previousValue = Number(currentInput); // Store current display as the first operand for the next calculation
+        operator = buttonValue; // Set the new pending operator
+        equalsPressed = false; // Reset equals flag
+    }
+    // --- Handle Equals (=) ---
+    else if (buttonValue === "=") {
+        if (previousValue !== null && operator !== null) {
+            let num2;
+            if (equalsPressed) {
+                // Chained equals (e.g., 5 + 3 = =). num2 should be the last operand.
+                num2 = Number(CALC_SCREEN.textContent); // This was previously result, so it's the A in A op B =
+                currentInput = calculate(currentInput, previousValue, cals[operator]).toString(); // Re-apply current result with the stored second operand
+            } else {
+                num2 = Number(currentInput);
+                currentInput = calculate(previousValue, num2, cals[operator]).toString();
+                previousValue = num2; // Store the second operand for chained equals
+            }
+            equalsPressed = true;
+        } else {
+            // If equals is pressed with no operation pending, just show current input as result
+            equalsPressed = true; // Still mark equals as pressed
+        }
+    }
+    // --- Handle Clear (C) ---
+    else if (buttonValue === "C") {
+        currentInput = "0";
+        previousValue = null;
+        operator = null;
+        equalsPressed = false;
+    }
+    // --- Handle Backspace (⌫) ---
+    else if (buttonValue === "⌫") {
+        if (currentInput.length > 1 && !equalsPressed) {
+            currentInput = currentInput.slice(0, -1);
+            if (currentInput === "") currentInput = "0"; // If backspace empties, set to "0"
+        } else {
+            currentInput = "0";
+        }
+        // If backspace after equals, revert to default clear state
+        if (equalsPressed) {
+             currentInput = "0";
+             previousValue = null;
+             operator = null;
+             equalsPressed = false;
+        }
     }
 
-    // --- Equals (=) Operator Handling ---
-    if (op === "=") {
-      let currentInputValue = n1.length > 0 && !newNumberReady ? Number(n1.join("")) : result;
+    // --- Display Result ---
+    CALC_SCREEN.textContent = currentInput;
 
-      if (lastop && lastop !== "=") {
-        // If equals is pressed after a pending operation (e.g., 5 + 3 =)
-        result = cal(n2, currentInputValue, cals[lastop]);
-        n2 = currentInputValue; // Store the second operand (current input) for chained equals
-      } else if (lastop === "=") {
-        // Chained equals (e.g., 5 + 3 = =). Re-applies the previous operation.
-        // n2 still holds the *second operand* of the previous calculation.
-        result = cal(result, n2, cals[op]); // Use the current result as first operand
-                                           // and the stored n2 as the second operand for repetition
-      } else {
-        // If equals is pressed without a preceding operator or number
-        result = Number(n1.join(""));
-        n2 = result; // Initialize n2 if it was just a number then equals
-      }
-
-      n1 = []; // Clear n1 for the next input
-      lastop = "="; // Mark last operation as equals for chained calculations
-      newNumberReady = true; // Next digit starts a new number
-    }
-
-    // --- Final Screen Update ---
-    CALC_SCREEN.textContent = !isFinite(result) ? "ERROR" : result;
+    // Remove blink effect after a short delay
+    const screenTimeout = setTimeout(() => {
+      clearTimeout(screenTimeout);
+      CALC_SCREEN.classList.remove("calculator__screen--blink");
+    }, 7);
   };
 
   // Initialize the theme on page load
@@ -238,38 +198,26 @@
         navigator.serviceWorker
           .register("/project-k/calculator/sw.js?v=1")
           .then((registration) => {
-            console.log("Service Worker registered with scope:", registration.scope);
+            console.log('Service Worker registered with scope:', registration.scope);
           })
           .catch((error) => {
-            if (
-              error.message.includes(
-                "ServiceWorkerContainer.register: Script URL's scheme is not 'http' or 'https'"
-              )
-            ) {
-              return console.warn(
-                "Service Worker registration error: Insecure context. Please use HTTPS or localhost.",
-                error
-              );
+            if (error.message.includes("ServiceWorkerContainer.register: Script URL's scheme is not 'http' or 'https'")) {
+              return console.warn('Service Worker registration error: Insecure context. Please use HTTPS or localhost.', error);
             }
-            console.error("Service Worker registration failed:", error);
+            console.error('Service Worker registration failed:', error);
           });
       } catch (error) {
-        console.error("Unexpected error during Service Worker registration:", error);
+        console.error('Unexpected error during Service Worker registration:', error);
       }
     } else {
-      console.log("Service Workers are not supported in this browser.");
+      console.log('Service Workers are not supported in this browser.');
     }
 
     // Event listeners for mouse and theme changes
     CALC.addEventListener("mousedown", (e) => btn(e));
 
-    // Remove blink effect after button release
-    CALC.addEventListener("mouseup", (e) => {
-      const screenTimeout = setTimeout(() => {
-        clearTimeout(screenTimeout);
-        CALC_SCREEN.classList.remove("calculator__screen--blink");
-      }, 7);
-    });
+    // Remove blink effect after button release (moved into btn function for direct control)
+    // CALC.addEventListener("mouseup", (e) => { ... });
 
     // Increment the theme on screen click
     CALC_SCREEN.addEventListener("click", (e) => {
