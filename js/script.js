@@ -74,22 +74,28 @@
   // Perform the calculation based on num1, num2, and the callback operator
   const cal = (num1, num2, calback) => {
     if (typeof calback === "function") {
-      const n1Str = num1.toString();
-      const n2Str = num2.toString();
+      // Ensure num1 and num2 are treated as numbers
+      const n1Val = Number(num1);
+      const n2Val = Number(num2);
+
+      const n1Str = n1Val.toString();
+      const n2Str = n2Val.toString();
       const len1 = (n1Str.includes(".") ? n1Str.split(".")[1].length : 0);
       const len2 = (n2Str.includes(".") ? n2Str.split(".")[1].length : 0);
       const maxDecimals = Math.max(len1, len2);
 
-      // Handle division separately for precision as fixed often truncates
+      // Handle division separately for precision and zero division
       if (calback === div) {
-        if (num2 === 0) return NaN; // Division by zero
-        return num1 / num2;
+        if (n2Val === 0) return NaN; // Division by zero
+        return n1Val / n2Val;
       }
       
       // For other operations, apply toFixed to handle floating point inaccuracies
-      return parseFloat(calback(Number(num1), Number(num2)).toFixed(maxDecimals));
+      // Use a more robust toFixed to avoid issues with very small numbers
+      const calculatedResult = calback(n1Val, n2Val);
+      return parseFloat(calculatedResult.toFixed(maxDecimals));
     }
-    return num2; // If no valid callback, return the second number (e.g., for '=' with no preceding op)
+    return Number(num2); // If no valid callback, return the second number (e.g., for '=' with no preceding op)
   };
 
   // Event handler for button clicks (numbers and operations)
@@ -112,19 +118,12 @@
       if (newNumberReady) {
         n1 = []; // Clear n1 to start fresh
         newNumberReady = false;
-        // If starting a new number with a decimal, prepend "0."
-        if (buttonValue === ",") {
-          n1.push("0", ".");
-          result = "0.";
-          CALC_SCREEN.textContent = result;
-          return; // Exit early as screen is updated
-        }
       }
 
       // Handle decimal point input
       if (buttonValue === ",") {
         if (!n1.includes(".")) { // Only add decimal if not already present
-          if (!n1.length) { // If ',' is the first input, make it "0."
+          if (!n1.length) { // If ',' is the first input or after an operator, make it "0."
             n1.push("0");
           }
           n1.push(".");
@@ -133,7 +132,8 @@
         if (n1.length === 1 && n1[0] === "0" && buttonValue !== "0" && !n1.includes(".")) {
           // Replace leading "0" with a new digit, unless it's "0" or decimal is present
           n1[0] = buttonValue;
-        } else if (!(n1.length === 0 && buttonValue === "0")) { // Prevent multiple leading zeros unless it's 0.something
+        } else if (!(n1.length === 0 && buttonValue === "0" && !n1.includes("."))) {
+          // Prevent multiple leading zeros (e.g., 001) but allow 0.something
           n1.push(buttonValue);
         }
       }
@@ -144,21 +144,21 @@
     else if (Object.keys(cals).includes(buttonValue)) {
       op = buttonValue; // Set the current operator
 
-      if (lastop && n1.length > 0 && !newNumberReady) {
-        // If a number was just entered and there was a pending operation
-        // Perform the calculation: result = (previous n2) operation (current n1)
-        n2 = cal(n2, Number(n1.join("")), cals[lastop]);
-        result = n2;
-      } else if (n1.length > 0 && !lastop) {
-        // If this is the very first number and operator, store n1 as n2
-        n2 = Number(n1.join(""));
-        result = n2;
-      } else if (newNumberReady && buttonValue !== "=" && lastop !== "=") {
-        // If operator pressed after another operator, and it's not "=", just update lastop
-        // This allows changing operator (e.g., "5 + * 3")
-        lastop = op;
-        CALC_SCREEN.textContent = !isFinite(result) ? "ERROR" : result;
-        return; // No calculation, just update the operator
+      if (lastop && lastop !== "=") { // If there was a pending operation (not "=" from last press)
+        if (n1.length > 0 && !newNumberReady) {
+          // If a new number was entered (second operand)
+          n2 = cal(n2, Number(n1.join("")), cals[lastop]);
+          result = n2; // Update result and n2 with the calculation
+        }
+        // If an operator is pressed immediately after another operator (e.g., 5 + *),
+        // and no new number was typed, just update lastop without calculating.
+      } else if (n1.length > 0) {
+        // If this is the very first number and operator, or after "="
+        n2 = Number(n1.join("")); // Store n1 as the first operand for the next calculation
+        result = n2; // Display this as the "result" for now
+      } else {
+        // If an operator is pressed before any number, or immediately after an equals
+        // but no new number was entered, just keep the current result/n2 as is.
       }
 
       lastop = op; // The current operator becomes the last operator for the next calculation
@@ -179,9 +179,11 @@
         // it means the user wants to edit the previous result.
         newNumberReady = false; // Allow editing
         op = null; // Clear operator state
-        lastop = null; // Clear last operator state
+        lastop = null; // Clear last operator state for fresh start
         n1 = result.toString().split(""); // Populate n1 with the last result for editing
-        n1.pop(); // Remove the last character
+        if (n1.length > 0) { // Ensure there's something to pop
+          n1.pop(); // Remove the last character
+        }
       } else {
         n1.pop(); // Remove the last character from current input
       }
@@ -199,18 +201,21 @@
 
     // --- Equals (=) Operator Handling ---
     if (op === "=") {
-      let currentInput = n1.length > 0 && !newNumberReady ? Number(n1.join("")) : n2;
+      let currentInputValue = n1.length > 0 && !newNumberReady ? Number(n1.join("")) : result;
 
       if (lastop && lastop !== "=") {
         // If equals is pressed after a pending operation (e.g., 5 + 3 =)
-        result = cal(n2, currentInput, cals[lastop]);
-        n2 = currentInput; // Store the second operand for chained equals
+        result = cal(n2, currentInputValue, cals[lastop]);
+        n2 = currentInputValue; // Store the second operand (current input) for chained equals
       } else if (lastop === "=") {
-        // Chained equals (e.g., 5 + 3 = =). Re-applies the last operation with the last n2 and current result.
-        result = cal(result, n2, cals[op]);
+        // Chained equals (e.g., 5 + 3 = =). Re-applies the previous operation.
+        // n2 still holds the *second operand* of the previous calculation.
+        result = cal(result, n2, cals[op]); // Use the current result as first operand
+                                           // and the stored n2 as the second operand for repetition
       } else {
         // If equals is pressed without a preceding operator or number
         result = Number(n1.join(""));
+        n2 = result; // Initialize n2 if it was just a number then equals
       }
 
       n1 = []; // Clear n1 for the next input
