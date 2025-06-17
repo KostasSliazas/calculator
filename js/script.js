@@ -136,7 +136,7 @@
             const target = e.target;
             const buttonValue = target.value;
             // Ignore clicks on non-button elements or specific IDs
-            if ((buttonValue === this.lastOperator || !target.matches("input") || target.id === "esound" || target.id === "src") {
+            if (buttonValue === this.lastOperator || !target.matches("input") || target.id === "esound" || target.id === "src") {
                 e.preventDefault();
                 e.stopPropagation();
                 return;
