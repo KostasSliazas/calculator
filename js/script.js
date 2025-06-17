@@ -71,26 +71,26 @@
             this.soundEnabledCheckbox = soundEnabledCheckbox;
 
             this.n1 = []; // Current input number as an array of digits/characters
-            this.n2 = 0; // Previous number for operations
-            this.operator = null; // Current selected operation
-            this.lastOperator = null; // Last operation performed
+            this.n2 = 0; // Previous number for operations (accumulator)
+            this.operator = null; // Currently displayed operator
+            this.lastOperator = null; // Last operator used in a calculation
             this.result = 0; // Calculation result
             this.awaitingNewNumber = false; // Flag to indicate if the next digit starts a new number
 
-            this.screen.textContent = 0; // Initialize screen
+            this.screen.textContent = 0; // Initialize screen with '0'
 
             this.themeCycler = new ThemeCycler(THEME_CLASSES);
 
-            // Mathematical functions
+            // Mathematical functions: These are the core operations.
             this.operations = {
                 "÷": (a, b) => {
-                    if (b === 0) return NaN; // Handle division by zero
+                    if (b === 0) return NaN; // Handle division by zero explicitly
                     return a / b;
                 },
                 "×": (a, b) => a * b,
                 "+": (a, b) => a + b,
                 "-": (a, b) => a - b,
-                "=": (a) => a, // For '=' operator, just returns the current value
+                "=": (a) => a, // For '=', just returns the current value, as _calculate handles the final result display.
             };
         }
 
@@ -109,43 +109,50 @@
 
         /**
          * @method _calculate
-         * @description Performs the arithmetic calculation based on the numbers and operator.
-         * @param {number} num1
-         * @param {number} num2
-         * @param {function} callbackFn - The mathematical function to apply.
+         * @description Performs the arithmetic calculation based on the numbers and operator,
+         * applying floating-point precision corrections.
+         * @param {number} num1 - The first operand (usually this.n2).
+         * @param {number} num2 - The second operand (usually current input from this.n1).
+         * @param {function} callbackFn - The mathematical function (e.g., this.operations['+']).
          * @returns {number} The result of the calculation.
          */
         _calculate(num1, num2, callbackFn) {
             if (typeof callbackFn !== "function") {
-                return num2; // If no valid callback, return the second number (e.g., for '=' without an operator)
+                return num2; // Should not happen if called correctly, but a safeguard.
             }
 
-            // Implement more robust floating-point precision handling
-            // This structure uses `lastOperator` to decide the precision strategy
+            // Apply different precision strategies based on the *last operator* that triggered the calculation
             switch (this.lastOperator) {
                 case "+":
                 case "-":
+                    // For addition and subtraction, find the maximum number of decimal places
+                    // to correctly scale and then des-cale to avoid floating point errors.
                     const n1DecimalsAddSub = (num1.toString().split(".")[1] || "").length;
                     const n2DecimalsAddSub = (num2.toString().split(".")[1] || "").length;
                     const maxDecimals = Math.max(n1DecimalsAddSub, n2DecimalsAddSub);
                     const factor = Math.pow(10, maxDecimals);
-                    // Use Math.round to mitigate tiny floating point errors before division
+
+                    // Perform operation using scaled integers, then divide by the factor
+                    // Math.round is crucial here to prevent tiny errors before division (e.g., 0.3 * 10 = 2.9999999999999996)
                     return callbackFn(Math.round(num1 * factor), Math.round(num2 * factor)) / factor;
 
                 case "×":
+                    // For multiplication, the total number of decimal places is the sum of decimal places.
                     const n1DecimalsMult = (num1.toString().split(".")[1] || "").length;
                     const n2DecimalsMult = (num2.toString().split(".")[1] || "").length;
                     const totalDecimalsMult = n1DecimalsMult + n2DecimalsMult;
                     const multResult = callbackFn(num1, num2);
-                    // toFixed works well for multiplication where sum of decimals is relevant
+                    
+                    // .toFixed() is appropriate here, then parse back to number
                     return parseFloat(multResult.toFixed(totalDecimalsMult));
 
                 case "÷":
-                    // Division by zero is handled in operations object; otherwise, direct calculation
+                    // Division by zero is already handled in the operations object.
+                    // Otherwise, direct calculation is usually fine.
                     return callbackFn(num1, num2);
 
                 default:
-                    // For operators like '=', or initial state, just perform the callback directly
+                    // For '=', or initial state where no previous operator defined complex precision.
                     return callbackFn(num1, num2);
             }
         }
@@ -159,8 +166,7 @@
             const target = e.target;
             const buttonValue = target.value;
 
-            // Ignore clicks on non-button elements or specific IDs
-            // Removed `buttonValue === this.lastOperator` to allow changing operators
+            // Ignore clicks on non-button elements or specific IDs (like sound checkbox, source link)
             if (!target.matches("input") || target.id === "esound" || target.id === "src") {
                 e.preventDefault();
                 e.stopPropagation();
@@ -170,27 +176,28 @@
             this.screen.classList.add("calculator__screen--blink");
             this.playSound();
 
-            // Handle numeric input
+            // Handle numeric input (digits 0-9)
             if (!isNaN(parseFloat(buttonValue))) {
                 if (this.awaitingNewNumber) {
-                    this.n1 = []; // Clear n1 to start a new number
+                    this.n1 = []; // Start a fresh number input
                     this.awaitingNewNumber = false;
                 }
 
-                // Handle leading zero: replace '0' with new digit unless it's a decimal point
+                // Handle leading zero logic
                 if (this.n1.length === 1 && this.n1[0] === "0" && buttonValue !== ".") {
-                    this.n1 = [buttonValue];
+                    this.n1 = [buttonValue]; // Replace '0' with the new digit
                 } else if (buttonValue === "." && this.n1.includes(".")) {
-                    // Do nothing if decimal already exists in current number
+                    // Do nothing if a decimal point already exists in the current number
                     return;
                 } else {
-                    this.n1.push(buttonValue);
+                    this.n1.push(buttonValue); // Add digit to current number
                 }
 
-                this.operator = null; // Clear active operator display as new number is being input
+                this.operator = null; // Clear the displayed operator as new number is being typed
 
-            } else { // Handle operators and special buttons
-                this.awaitingNewNumber = true; // Next digit will start a new number
+            } else { // Handle operators and special buttons (C, ⌫, +, -, ×, ÷, =)
+                // Operators usually signal that a number has finished being entered
+                this.awaitingNewNumber = true;
 
                 if (buttonValue === "C") {
                     this.reset();
@@ -199,60 +206,67 @@
 
                 if (buttonValue === "⌫") {
                     if (this.n1.length > 0 && !this.awaitingNewNumber) {
-                        this.n1.pop();
-                        if (this.n1.length === 0 || (this.n1.length === 1 && this.n1[0] === ".")) {
-                             this.n1 = ["0"]; // If nothing left or only '.', display '0'
+                        // If currently typing a number (n1 is not empty and not awaiting new number)
+                        this.n1.pop(); // Remove the last character
+                        if (this.n1.length === 0) {
+                            this.n1 = ["0"]; // If all digits removed, set to "0"
+                        } else if (this.n1.length === 1 && this.n1[0] === "-") {
+                            // If only '-' remains, reset to "0" (e.g., after typing "-5" and backspacing "5")
+                            this.n1 = ["0"];
                         }
-                    } else if (this.result !== 0) {
-                        // If no current input and a result exists, clear result for new input
+                    } else if (this.awaitingNewNumber && this.result !== 0) {
+                        // If an operator was just pressed or result is displayed,
+                        // clear the result and reset for a new calculation start.
                         this.result = 0;
-                        this.n1 = ["0"]; // Reset to zero for display
-                        this.lastOperator = null; // Clear previous operator for fresh start
-                        this.awaitingNewNumber = false;
+                        this.n1 = ["0"]; // Display '0'
+                        this.n2 = 0; // Reset n2 (accumulator)
+                        this.lastOperator = null; // Clear previous operator
+                        this.operator = null;
+                        this.awaitingNewNumber = false; // Allow new input immediately
                     }
                     this.updateScreen(); // Update screen immediately for backspace
                     return; // Skip further operator processing
                 }
 
-                if (buttonValue === ",") { // Handle decimal point input
-                    if (!this.n1.includes(".")) {
-                        if (this.n1.length === 0 || (this.n1.length === 1 && this.n1[0] === "0" && !this.awaitingNewNumber)) {
-                            this.n1 = ["0", "."]; // Ensure "0." if nothing or only "0" before decimal
+                if (buttonValue === "," || buttonValue === ".") { // Handle decimal point input (assuming "," maps to ".")
+                    if (!this.n1.includes(".")) { // Only add if no decimal already exists
+                        if (this.n1.length === 0 || this.awaitingNewNumber) {
+                            // If starting a new number or no number entered yet, start with "0."
+                            this.n1 = ["0", "."];
+                            this.awaitingNewNumber = false; // Decimal is part of the current number, not awaiting new.
                         } else {
-                            this.n1.push("."); // Add decimal point
+                            this.n1.push("."); // Add decimal to current number
                         }
                     }
-                    this.awaitingNewNumber = false; // Decimal does not start a new number context
+                    this.operator = null; // Keep operator null as it's part of number entry
                 } else if (Object.keys(this.operations).includes(buttonValue)) {
                     // This block handles actual arithmetic operators (+, -, ×, ÷, =)
-                    const currentInput = parseFloat(this.n1.join(""));
+                    let currentInput = parseFloat(this.n1.join("") || this.n2); // Use n2 if n1 is empty (e.g., 5 + +)
+
+                    // If n1 is empty or only contains a decimal, treat it as 0 for calculation
+                    if (this.n1.length === 0 || (this.n1.length === 1 && this.n1[0] === ".")) {
+                        currentInput = 0;
+                    } else {
+                        currentInput = parseFloat(this.n1.join(""));
+                    }
 
                     if (this.lastOperator && this.lastOperator !== "=") {
-                        // Chain operations: calculate with previous operator
-                        if (this.n1.length > 0 && this.n1.join("") !== ".") { // Only calculate if there's valid input
-                            this.result = this._calculate(this.n2, currentInput, this.operations[this.lastOperator]);
-                        } else {
-                            // If user presses operator multiple times without new input,
-                            // just update the lastOperator for the next calculation
-                            this.lastOperator = buttonValue;
-                            this.operator = buttonValue; // Update display of current operator
-                            this.updateScreen();
-                            return; // Don't perform calculation yet
-                        }
+                        // Chain operations: calculate using the accumulated n2 and the current input
+                        this.result = this._calculate(this.n2, currentInput, this.operations[this.lastOperator]);
                     } else {
                         // First operation or after '='. The current input becomes the base for next operation.
                         this.result = currentInput;
                     }
-
+                    
                     this.lastOperator = buttonValue; // Set the operator for the *next* calculation
-                    this.n2 = this.result; // Store current result for next operation
+                    this.n2 = this.result; // Store current result as the first operand (accumulator) for the next operation
                     this.n1.length = 0; // Clear n1, ready for the next number input
 
                     if (buttonValue === "=") {
-                        this.awaitingNewNumber = true; // After '=', next digit starts a new number
+                        this.awaitingNewNumber = true; // After '=', next digit starts a completely new calculation
                         this.lastOperator = null; // Clear last operator after equals for a fresh start
                     }
-                    this.operator = buttonValue; // Store the current operator (for display, if needed)
+                    this.operator = buttonValue; // Store the current operator (for display feedback)
                 }
             }
             this.updateScreen();
@@ -265,18 +279,25 @@
         updateScreen() {
             let displayValue;
 
-            if (this.operator && this.operator !== "=" && this.n1.length === 0 && !this.awaitingNewNumber) {
-                // If an operator is selected and no new number is being typed,
-                // and we're not awaiting a new number, display n2 (the running total)
-                displayValue = this.n2;
-            } else if (this.n1.length > 0 && this.n1.join("") !== ".") {
+            // Priority for display:
+            // 1. Current number being typed (n1)
+            // 2. Running total (n2) if an operator is active and we're awaiting a new number.
+            //    This is for scenarios like "5 + [display 5] 3 = [display 8]". After pressing '+', '5' should remain.
+            // 3. Final result (this.result) as fallback if no other condition met.
+            // 4. Default to '0' if all else fails.
+
+            if (this.n1.length > 0 && this.n1.join("") !== ".") {
                 // If there's ongoing input, display it
                 displayValue = this.n1.join("");
             } else if (this.n1.join("") === ".") {
-                // Specifically handle just a '.' being input
+                // Special display for just a decimal point (e.g., typing ".")
                 displayValue = "0.";
+            } else if (this.awaitingNewNumber && this.operator && this.operator !== "=") {
+                // If an operator was just pressed and we're awaiting the next number,
+                // display the accumulated result (n2).
+                displayValue = this.n2;
             } else {
-                // Otherwise display the result or 0
+                // Otherwise, display the last calculated result or initial 0
                 displayValue = this.result;
             }
 
@@ -284,14 +305,21 @@
                 this.screen.textContent = "ERROR";
                 this.reset(); // Reset calculator state on error to allow recovery
             } else {
-                // Format the number to avoid excessive decimal places in display for results.
+                // Format the number for display to prevent overflow and excessive precision
                 // This is purely for display, not calculation precision.
-                if (typeof displayValue === 'number' && Math.abs(displayValue).toString().length > 10) {
-                    // Use toPrecision for numbers that are too long for the display
-                    this.screen.textContent = parseFloat(displayValue.toPrecision(10)).toString();
-                } else {
-                    this.screen.textContent = displayValue.toString();
+                let formattedValue = displayValue.toString();
+
+                if (typeof displayValue === 'number') {
+                    // Handle scientific notation for very large or very small numbers
+                    // Adjust thresholds (e.g., 1e10 for large, 1e-10 for small non-zero)
+                    if (Math.abs(displayValue) > 9999999999 || (Math.abs(displayValue) < 0.0000000001 && Math.abs(displayValue) !== 0)) {
+                         formattedValue = displayValue.toExponential(5); // Example: 5 decimal places in exponent form
+                    } else if (formattedValue.length > 10) { // General length check for non-scientific
+                        // Use toPrecision to limit total digits, then convert back to string
+                        formattedValue = parseFloat(displayValue.toPrecision(10)).toString();
+                    }
                 }
+                this.screen.textContent = formattedValue;
             }
         }
 
@@ -333,6 +361,7 @@
             if (!isNaN(storedThemeIndex)) {
                 this.themeCycler.setIndex(storedThemeIndex);
             } else {
+                // Set a random initial theme if none is stored
                 this.themeCycler.setIndex(Math.floor(Math.random() * (this.themeCycler.maxIndex + 1)));
             }
             this.changeTheme();
@@ -384,13 +413,13 @@
             });
 
             CALC_SCREEN.addEventListener("click", (e) => {
-                e.preventDefault();
+                e.preventDefault(); // Prevent text selection on quick clicks
                 this.themeCycler.increment();
                 this.changeTheme();
             });
 
             CALC_SCREEN.addEventListener("contextmenu", (e) => {
-                e.preventDefault();
+                e.preventDefault(); // Prevent context menu
                 this.themeCycler.decrement();
                 this.changeTheme();
             });
