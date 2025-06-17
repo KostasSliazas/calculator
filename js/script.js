@@ -134,9 +134,9 @@
          */
         processInput(e) {
             const target = e.target;
-
+            const buttonValue = target.value;
             // Ignore clicks on non-button elements or specific IDs
-            if (!target.matches("input") || target.id === "esound" || target.id === "src") {
+            if ((buttonValue === this.lastOperator || !target.matches("input") || target.id === "esound" || target.id === "src") {
                 e.preventDefault();
                 e.stopPropagation();
                 return;
@@ -144,11 +144,10 @@
 
             this.screen.classList.add("calculator__screen--blink");
             this.playSound();
-
-            const buttonValue = target.value;
-
+            
             // Handle numeric input
             if (!isNaN(parseFloat(buttonValue))) {
+                this.lastOperator = this.operator;
                 this.operator = null; // Clear operator as new number is being input
                 if (this.n1[0] === "0" && this.n1[1] !== ".") {
                     this.n1.length = 0; // Remove leading zero unless it's a decimal
