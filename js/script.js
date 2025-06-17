@@ -147,7 +147,6 @@
             
             // Handle numeric input
             if (!isNaN(parseFloat(buttonValue))) {
-               // this.lastOperator = this.operator;
                 this.operator = null; // Clear operator as new number is being input
                 if (this.n1[0] === "0" && this.n1[1] !== ".") {
                     this.n1.length = 0; // Remove leading zero unless it's a decimal
@@ -157,6 +156,8 @@
             } else {
                 // Handle operators and special buttons
                 this.operator = buttonValue;
+                
+                this.lastOperator = this.operator;
 
                 if (this.operator === "C") {
                     this.reset();
