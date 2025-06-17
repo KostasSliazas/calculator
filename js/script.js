@@ -196,36 +196,48 @@
                 this.operator = null; // Clear the displayed operator as new number is being typed
 
             } else { // Handle operators and special buttons (C, ⌫, +, -, ×, ÷, =)
-                // Operators usually signal that a number has finished being entered
-                this.awaitingNewNumber = true;
-
+                
                 if (buttonValue === "C") {
                     this.reset();
                     return;
                 }
 
                 if (buttonValue === "⌫") {
-                    if (this.n1.length > 0 && !this.awaitingNewNumber) {
-                        // If currently typing a number (n1 is not empty and not awaiting new number)
+                    // Backspace should act on the displayed number.
+                    // If we're awaiting a new number (meaning an operator was just pressed or '=' was used),
+                    // the displayed number is either 'n2' (running total) or 'result' (final result).
+                    // We need to move that number into n1 so it can be edited.
+                    if (this.awaitingNewNumber) {
+                        let valueToEdit = this.result; // After '=', result is primary.
+                        if (this.lastOperator && this.lastOperator !== "=" && this.n1.length === 0) {
+                            // If an operator was just pressed and no new number typed, n2 is what's displayed.
+                            valueToEdit = this.n2;
+                        }
+                        this.n1 = Array.from(valueToEdit.toString()); // Convert to array of chars for editing
+                        this.n2 = 0; // Reset n2 as we're now editing a new n1
+                        this.lastOperator = null; // Clear last operator
+                        this.result = 0; // Clear result so it doesn't interfere
+                        this.operator = null; // Clear displayed operator
+                        this.awaitingNewNumber = false; // No longer awaiting a new number, we are editing n1
+                    }
+
+                    // Now, n1 reliably holds the number to be backspaced
+                    if (this.n1.length > 0) {
                         this.n1.pop(); // Remove the last character
+
                         if (this.n1.length === 0) {
-                            this.n1 = ["0"]; // If all digits removed, set to "0"
+                            this.n1 = ["0"]; // If all digits removed, display '0'
                         } else if (this.n1.length === 1 && this.n1[0] === "-") {
-                            // If only '-' remains, reset to "0" (e.g., after typing "-5" and backspacing "5")
+                            // Special case: if only '-' remains (e.g., after backspacing "-5" to just "-"), display '0'
                             this.n1 = ["0"];
                         }
-                    } else if (this.awaitingNewNumber && this.result !== 0) {
-                        // If an operator was just pressed or result is displayed,
-                        // clear the result and reset for a new calculation start.
-                        this.result = 0;
-                        this.n1 = ["0"]; // Display '0'
-                        this.n2 = 0; // Reset n2 (accumulator)
-                        this.lastOperator = null; // Clear previous operator
-                        this.operator = null;
-                        this.awaitingNewNumber = false; // Allow new input immediately
+                    } else {
+                        // If n1 was already empty (e.g., initial state or after clear), nothing to backspace
+                        this.n1 = ["0"];
                     }
-                    this.updateScreen(); // Update screen immediately for backspace
-                    return; // Skip further operator processing
+
+                    this.updateScreen();
+                    return; // Stop further processing for backspace
                 }
 
                 if (buttonValue === "," || buttonValue === ".") { // Handle decimal point input (assuming "," maps to ".")
@@ -241,20 +253,23 @@
                     this.operator = null; // Keep operator null as it's part of number entry
                 } else if (Object.keys(this.operations).includes(buttonValue)) {
                     // This block handles actual arithmetic operators (+, -, ×, ÷, =)
-                    let currentInput = parseFloat(this.n1.join("") || this.n2); // Use n2 if n1 is empty (e.g., 5 + +)
+                    // Signal that the next digit will start a new number
+                    this.awaitingNewNumber = true;
 
-                    // If n1 is empty or only contains a decimal, treat it as 0 for calculation
-                    if (this.n1.length === 0 || (this.n1.length === 1 && this.n1[0] === ".")) {
-                        currentInput = 0;
-                    } else {
+                    // Determine the current input value for calculation
+                    let currentInput;
+                    if (this.n1.length > 0 && this.n1.join("") !== "." && !isNaN(parseFloat(this.n1.join("")))) {
                         currentInput = parseFloat(this.n1.join(""));
+                    } else {
+                        // If n1 is empty or just '.', use n2 (the accumulated result) for chained operations
+                        currentInput = this.n2;
                     }
 
                     if (this.lastOperator && this.lastOperator !== "=") {
-                        // Chain operations: calculate using the accumulated n2 and the current input
+                        // If there's a pending operation, calculate with n2 and currentInput
                         this.result = this._calculate(this.n2, currentInput, this.operations[this.lastOperator]);
                     } else {
-                        // First operation or after '='. The current input becomes the base for next operation.
+                        // First operation or after '=', the current input becomes the base
                         this.result = currentInput;
                     }
                     
@@ -280,24 +295,21 @@
             let displayValue;
 
             // Priority for display:
-            // 1. Current number being typed (n1)
-            // 2. Running total (n2) if an operator is active and we're awaiting a new number.
-            //    This is for scenarios like "5 + [display 5] 3 = [display 8]". After pressing '+', '5' should remain.
-            // 3. Final result (this.result) as fallback if no other condition met.
-            // 4. Default to '0' if all else fails.
+            // 1. Current number being typed (n1) if not empty or just a decimal point.
+            // 2. "0." if n1 is only a decimal point.
+            // 3. Running total (n2) if an operator is active and we're awaiting a new number (e.g., "5 +").
+            // 4. Final result (this.result) as fallback.
+            // 5. Default to '0' if all else fails (e.g., initial state or after 'C').
 
             if (this.n1.length > 0 && this.n1.join("") !== ".") {
-                // If there's ongoing input, display it
                 displayValue = this.n1.join("");
             } else if (this.n1.join("") === ".") {
-                // Special display for just a decimal point (e.g., typing ".")
                 displayValue = "0.";
             } else if (this.awaitingNewNumber && this.operator && this.operator !== "=") {
                 // If an operator was just pressed and we're awaiting the next number,
                 // display the accumulated result (n2).
                 displayValue = this.n2;
             } else {
-                // Otherwise, display the last calculated result or initial 0
                 displayValue = this.result;
             }
 
@@ -305,17 +317,14 @@
                 this.screen.textContent = "ERROR";
                 this.reset(); // Reset calculator state on error to allow recovery
             } else {
-                // Format the number for display to prevent overflow and excessive precision
-                // This is purely for display, not calculation precision.
                 let formattedValue = displayValue.toString();
 
                 if (typeof displayValue === 'number') {
                     // Handle scientific notation for very large or very small numbers
-                    // Adjust thresholds (e.g., 1e10 for large, 1e-10 for small non-zero)
+                    // Adjust thresholds as needed
                     if (Math.abs(displayValue) > 9999999999 || (Math.abs(displayValue) < 0.0000000001 && Math.abs(displayValue) !== 0)) {
                          formattedValue = displayValue.toExponential(5); // Example: 5 decimal places in exponent form
                     } else if (formattedValue.length > 10) { // General length check for non-scientific
-                        // Use toPrecision to limit total digits, then convert back to string
                         formattedValue = parseFloat(displayValue.toPrecision(10)).toString();
                     }
                 }
