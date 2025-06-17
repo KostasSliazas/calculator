@@ -199,7 +199,7 @@
                         this.result = currentInput;
                     }
 
-                    this.lastOperator = this.operator;
+                    //this.lastOperator = this.operator;
                     this.n2 = this.result; // Store current result for next operation
                     this.n1.length = 0; // Clear n1 for next input
                 }
