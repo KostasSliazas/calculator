@@ -54,8 +54,8 @@
             if (index >= 0 && index <= this.maxIndex) {
                 this.currentIndex = index;
             } else {
-                console.warn(`Invalid theme index: ${index}. Falling back to random theme.`);
-                this.currentIndex = Math.floor(Math.random() * (this.maxIndex + 1));
+                // Fallback to the first theme (index 0), more predictable than random
+                this.currentIndex = 0;
             }
         }
     }
@@ -75,6 +75,7 @@
             this.operator = null; // Current selected operation
             this.lastOperator = null; // Last operation performed
             this.result = 0; // Calculation result
+            this.awaitingNewNumber = false; // Flag to indicate if the next digit starts a new number
 
             this.screen.textContent = 0; // Initialize screen
 
@@ -82,7 +83,10 @@
 
             // Mathematical functions
             this.operations = {
-                "÷": (a, b) => a / b,
+                "÷": (a, b) => {
+                    if (b === 0) return NaN; // Handle division by zero
+                    return a / b;
+                },
                 "×": (a, b) => a * b,
                 "+": (a, b) => a + b,
                 "-": (a, b) => a - b,
@@ -116,15 +120,34 @@
                 return num2; // If no valid callback, return the second number (e.g., for '=' without an operator)
             }
 
-            // Handle floating-point precision for non-division operations
-            if (this.lastOperator !== "÷") {
-                const n1Decimals = (num1.toString().split(".")[1] || "").length;
-                const n2Decimals = (num2.toString().split(".")[1] || "").length;
-                const totalDecimals = n1Decimals + n2Decimals;
-                return parseFloat(callbackFn(num1, num2).toFixed(totalDecimals));
-            }
+            // Implement more robust floating-point precision handling
+            // This structure uses `lastOperator` to decide the precision strategy
+            switch (this.lastOperator) {
+                case "+":
+                case "-":
+                    const n1DecimalsAddSub = (num1.toString().split(".")[1] || "").length;
+                    const n2DecimalsAddSub = (num2.toString().split(".")[1] || "").length;
+                    const maxDecimals = Math.max(n1DecimalsAddSub, n2DecimalsAddSub);
+                    const factor = Math.pow(10, maxDecimals);
+                    // Use Math.round to mitigate tiny floating point errors before division
+                    return callbackFn(Math.round(num1 * factor), Math.round(num2 * factor)) / factor;
 
-            return callbackFn(num1, num2);
+                case "×":
+                    const n1DecimalsMult = (num1.toString().split(".")[1] || "").length;
+                    const n2DecimalsMult = (num2.toString().split(".")[1] || "").length;
+                    const totalDecimalsMult = n1DecimalsMult + n2DecimalsMult;
+                    const multResult = callbackFn(num1, num2);
+                    // toFixed works well for multiplication where sum of decimals is relevant
+                    return parseFloat(multResult.toFixed(totalDecimalsMult));
+
+                case "÷":
+                    // Division by zero is handled in operations object; otherwise, direct calculation
+                    return callbackFn(num1, num2);
+
+                default:
+                    // For operators like '=', or initial state, just perform the callback directly
+                    return callbackFn(num1, num2);
+            }
         }
 
         /**
@@ -135,8 +158,10 @@
         processInput(e) {
             const target = e.target;
             const buttonValue = target.value;
+
             // Ignore clicks on non-button elements or specific IDs
-            if (buttonValue === this.lastOperator || !target.matches("input") || target.id === "esound" || target.id === "src") {
+            // Removed `buttonValue === this.lastOperator` to allow changing operators
+            if (!target.matches("input") || target.id === "esound" || target.id === "src") {
                 e.preventDefault();
                 e.stopPropagation();
                 return;
@@ -144,67 +169,92 @@
 
             this.screen.classList.add("calculator__screen--blink");
             this.playSound();
-            
+
             // Handle numeric input
             if (!isNaN(parseFloat(buttonValue))) {
-                this.operator = null; // Clear operator as new number is being input
-                if (this.n1[0] === "0" && this.n1[1] !== ".") {
-                    this.n1.length = 0; // Remove leading zero unless it's a decimal
+                if (this.awaitingNewNumber) {
+                    this.n1 = []; // Clear n1 to start a new number
+                    this.awaitingNewNumber = false;
                 }
-                this.n1.push(buttonValue);
-                this.result = parseFloat(this.n1.join("")); // Update result immediately with current input
-            } else {
-                // Handle operators and special buttons
-                this.operator = buttonValue;
-                
-                this.lastOperator = this.operator;
 
-                if (this.operator === "C") {
+                // Handle leading zero: replace '0' with new digit unless it's a decimal point
+                if (this.n1.length === 1 && this.n1[0] === "0" && buttonValue !== ".") {
+                    this.n1 = [buttonValue];
+                } else if (buttonValue === "." && this.n1.includes(".")) {
+                    // Do nothing if decimal already exists in current number
+                    return;
+                } else {
+                    this.n1.push(buttonValue);
+                }
+
+                this.operator = null; // Clear active operator display as new number is being input
+
+            } else { // Handle operators and special buttons
+                this.awaitingNewNumber = true; // Next digit will start a new number
+
+                if (buttonValue === "C") {
                     this.reset();
                     return;
                 }
 
-                if (this.operator === "⌫") {
-                    if (this.n1.length > 0) {
+                if (buttonValue === "⌫") {
+                    if (this.n1.length > 0 && !this.awaitingNewNumber) {
                         this.n1.pop();
-                        // If after popping, the last char is '.', remove it too
-                        if (this.n1.join("").charAt(this.n1.join("").length - 1) === ".") {
-                            this.n1.pop();
+                        if (this.n1.length === 0 || (this.n1.length === 1 && this.n1[0] === ".")) {
+                             this.n1 = ["0"]; // If nothing left or only '.', display '0'
                         }
                     } else if (this.result !== 0) {
-                        // If n1 is empty but result exists, operate on result
-                        let resultString = this.result.toString();
-                        resultString = resultString.substring(0, resultString.length - 1);
-                        this.result = parseFloat(resultString || "0");
-                        this.n1 = Array.from(resultString); // Update n1 for continuous input
+                        // If no current input and a result exists, clear result for new input
+                        this.result = 0;
+                        this.n1 = ["0"]; // Reset to zero for display
+                        this.lastOperator = null; // Clear previous operator for fresh start
+                        this.awaitingNewNumber = false;
                     }
+                    this.updateScreen(); // Update screen immediately for backspace
+                    return; // Skip further operator processing
                 }
 
-                if (this.n1.length === 0) {
-                    this.n1 = ["0"]; // Ensure there's always a number displayed
-                }
-
-                if (this.operator === "," && !this.n1.includes(".")) {
-                    this.n1.push("."); // Add decimal point
-                }
-
-                // Perform calculation when a valid operator is pressed
-                if (Object.keys(this.operations).includes(this.operator) && this.n1.join("") !== ".") {
+                if (buttonValue === ",") { // Handle decimal point input
+                    if (!this.n1.includes(".")) {
+                        if (this.n1.length === 0 || (this.n1.length === 1 && this.n1[0] === "0" && !this.awaitingNewNumber)) {
+                            this.n1 = ["0", "."]; // Ensure "0." if nothing or only "0" before decimal
+                        } else {
+                            this.n1.push("."); // Add decimal point
+                        }
+                    }
+                    this.awaitingNewNumber = false; // Decimal does not start a new number context
+                } else if (Object.keys(this.operations).includes(buttonValue)) {
+                    // This block handles actual arithmetic operators (+, -, ×, ÷, =)
                     const currentInput = parseFloat(this.n1.join(""));
 
                     if (this.lastOperator && this.lastOperator !== "=") {
-                        this.result = this._calculate(this.n2, currentInput, this.operations[this.lastOperator]);
+                        // Chain operations: calculate with previous operator
+                        if (this.n1.length > 0 && this.n1.join("") !== ".") { // Only calculate if there's valid input
+                            this.result = this._calculate(this.n2, currentInput, this.operations[this.lastOperator]);
+                        } else {
+                            // If user presses operator multiple times without new input,
+                            // just update the lastOperator for the next calculation
+                            this.lastOperator = buttonValue;
+                            this.operator = buttonValue; // Update display of current operator
+                            this.updateScreen();
+                            return; // Don't perform calculation yet
+                        }
                     } else {
-                        // First operation or after '='
+                        // First operation or after '='. The current input becomes the base for next operation.
                         this.result = currentInput;
                     }
 
-                    //this.lastOperator = this.operator;
+                    this.lastOperator = buttonValue; // Set the operator for the *next* calculation
                     this.n2 = this.result; // Store current result for next operation
-                    this.n1.length = 0; // Clear n1 for next input
+                    this.n1.length = 0; // Clear n1, ready for the next number input
+
+                    if (buttonValue === "=") {
+                        this.awaitingNewNumber = true; // After '=', next digit starts a new number
+                        this.lastOperator = null; // Clear last operator after equals for a fresh start
+                    }
+                    this.operator = buttonValue; // Store the current operator (for display, if needed)
                 }
             }
-
             this.updateScreen();
         }
 
@@ -213,20 +263,38 @@
          * @description Updates the calculator display screen.
          */
         updateScreen() {
-            // Display the current input if available, otherwise the result
-            let displayValue = this.n1.length > 0 ? this.n1.join("") : this.result;
+            let displayValue;
+
+            if (this.operator && this.operator !== "=" && this.n1.length === 0 && !this.awaitingNewNumber) {
+                // If an operator is selected and no new number is being typed,
+                // and we're not awaiting a new number, display n2 (the running total)
+                displayValue = this.n2;
+            } else if (this.n1.length > 0 && this.n1.join("") !== ".") {
+                // If there's ongoing input, display it
+                displayValue = this.n1.join("");
+            } else if (this.n1.join("") === ".") {
+                // Specifically handle just a '.' being input
+                displayValue = "0.";
+            } else {
+                // Otherwise display the result or 0
+                displayValue = this.result;
+            }
 
             if (!isFinite(displayValue)) {
                 this.screen.textContent = "ERROR";
+                this.reset(); // Reset calculator state on error to allow recovery
             } else {
-                // Ensure display value is not empty or just a decimal point
-                if (displayValue === "" || displayValue === ".") {
-                    this.screen.textContent = "0";
+                // Format the number to avoid excessive decimal places in display for results.
+                // This is purely for display, not calculation precision.
+                if (typeof displayValue === 'number' && Math.abs(displayValue).toString().length > 10) {
+                    // Use toPrecision for numbers that are too long for the display
+                    this.screen.textContent = parseFloat(displayValue.toPrecision(10)).toString();
                 } else {
-                    this.screen.textContent = displayValue;
+                    this.screen.textContent = displayValue.toString();
                 }
             }
         }
+
 
         /**
          * @method reset
@@ -238,6 +306,7 @@
             this.operator = null;
             this.lastOperator = null;
             this.result = 0;
+            this.awaitingNewNumber = false;
             this.screen.textContent = 0;
         }
 
@@ -276,6 +345,10 @@
         registerServiceWorker() {
             if ('serviceWorker' in navigator) {
                 try {
+                    // IMPORTANT: Adjust the path to sw.js based on your deployment.
+                    // If sw.js is in the same directory as this HTML, use './sw.js'.
+                    // If it's at the root of your domain, use '/sw.js'.
+                    // The current path '/project-k/calculator/sw.js' implies a specific subfolder structure.
                     navigator.serviceWorker.register('/project-k/calculator/sw.js?v=1')
                         .then((registration) => {
                             console.log('Service Worker registered with scope:', registration.scope);
