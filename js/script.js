@@ -1,4 +1,4 @@
-/*t esversion: 8 */
+/* jshint esversion: 8 */
 (function (w, d) {
     "use strict";
 
@@ -83,10 +83,7 @@
 
             // Mathematical functions: These are the core operations.
             this.operations = {
-                "÷": (a, b) => {
-                    if (b === 0) return NaN; // Handle division by zero explicitly
-                    return a / b;
-                },
+                "÷": (a, b) => a / b,
                 "×": (a, b) => a * b,
                 "+": (a, b) => a + b,
                 "-": (a, b) => a - b,
@@ -147,7 +144,7 @@
                     const n2Decimals = (num2.toString().split(".")[1] || "").length;
                     const totalDecimals = n1Decimals + n2Decimals;
                     const multResult = callbackFn(num1, num2);
-                    
+
                     // .toFixed() is appropriate here, then parse back to a number.
                     return parseFloat(multResult.toFixed(totalDecimals));
                 }
@@ -205,7 +202,7 @@
                 this.operator = null; // Clear the displayed operator as a new number is being typed
 
             } else { // Handle operators and special buttons (C, ⌫, +, -, ×, ÷, =)
-                
+
                 if (buttonValue === "C") {
                     this.reset();
                     return;
@@ -266,7 +263,7 @@
                         // First operation, or after '=', the current input becomes the base
                         this.result = currentInput;
                     }
-                    
+
                     this.n2 = this.result; // Store current result as the first operand (accumulator) for the next operation
                     this.n1.length = 0; // Clear n1, ready for the next number input
                     this.operator = buttonValue; // Store the current operator for display feedback
@@ -304,7 +301,7 @@
                 // Default to '0' (initial state, after 'C', etc.)
                 displayValue = 0;
             }
-            
+
             // Special handling for ".": display "0."
             if (displayValue === ".") {
                 displayValue = "0.";
@@ -312,7 +309,7 @@
 
             if (!isFinite(displayValue) || isNaN(displayValue)) {
                 this.screen.textContent = "ERROR";
-                this.reset(); // Reset calculator state on error to allow recovery
+                //this.reset(); // Reset calculator state on error to allow recovery
             } else {
                 let formattedValue = displayValue.toString();
 
@@ -377,35 +374,6 @@
         }
 
         /**
-         * @method registerServiceWorker
-         * @description Registers the service worker for offline capabilities.
-         */
-        registerServiceWorker() {
-            if ('serviceWorker' in navigator) {
-                try {
-                    // IMPORTANT: Adjust the path to sw.js based on your deployment.
-                    // If sw.js is in the same directory as this HTML, use './sw.js'.
-                    // If it's at the root of your domain, use '/sw.js'.
-                    // The current path '/project-k/calculator/sw.js' implies a specific subfolder structure.
-                    navigator.serviceWorker.register('/project-k/calculator/sw.js?v=1')
-                        .then((registration) => {
-                            console.log('Service Worker registered with scope:', registration.scope);
-                        })
-                        .catch((error) => {
-                            if (error.message.includes("ServiceWorkerContainer.register: Script URL's scheme is not 'http' or 'https'")) {
-                                return console.warn('Service Worker registration error: Insecure context. Please use HTTPS or localhost.', error);
-                            }
-                            console.error('Service Worker registration failed:', error);
-                        });
-                } catch (error) {
-                    console.error('Unexpected error during Service Worker registration:', error);
-                }
-            } else {
-                console.log('Service Workers are not supported in this browser.');
-            }
-        }
-
-        /**
          * @method setupEventListeners
          * @description Sets up all event listeners for the calculator.
          */
@@ -432,6 +400,34 @@
                 this.themeCycler.decrement();
                 this.changeTheme();
             });
+        }
+/**
+         * @method registerServiceWorker
+         * @description Registers the service worker for offline capabilities.
+         */
+        registerServiceWorker() {
+            if ('serviceWorker' in navigator) {
+                try {
+                    // IMPORTANT: Adjust the path to sw.js based on your deployment.
+                    // If sw.js is in the same directory as this HTML, use './sw.js'.
+                    // If it's at the root of your domain, use '/sw.js'.
+                    // The current path '/project-k/calculator/sw.js' implies a specific subfolder structure.
+                    navigator.serviceWorker.register('/project-k/calculator/sw.js?v=1')
+                        .then((registration) => {
+                            console.log('Service Worker registered with scope:', registration.scope);
+                        })
+                        .catch((error) => {
+                            if (error.message.includes("ServiceWorkerContainer.register: Script URL's scheme is not 'http' or 'https'")) {
+                                return console.warn('Service Worker registration error: Insecure context. Please use HTTPS or localhost.', error);
+                            }
+                            console.error('Service Worker registration failed:', error);
+                        });
+                } catch (error) {
+                    console.error('Unexpected error during Service Worker registration:', error);
+                }
+            } else {
+                console.log('Service Workers are not supported in this browser.');
+            }
         }
 
         /**
