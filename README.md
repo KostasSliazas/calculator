@@ -10,7 +10,6 @@ A simple and responsive calculator built using **vanilla JavaScript**, **HTML**,
 - 📱 **Responsive Design**: Optimized for different screen sizes.
 - 🎨 **Theme Switching**: Toggle between themes by clicking on the screen.
 - ✨ **Clean Code**: Follows the BEM methodology for CSS structure and uses vanilla JavaScript for functionality.
-- ⌨️ **Keyboard Support**: -
 
 ---
 
